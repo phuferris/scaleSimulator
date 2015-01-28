@@ -15,15 +15,12 @@ APs_list = [];
 Nodes_coordinates = zeros(numNodes, 2);
 
 % Initialize sensor direct connection to a nearest Access Point AP
-% Initialize sensor status 
+% Initialize sensor status
+issid = 0;
 for k=1:numNodes
     Nodes_list(k).id = k;
     Nodes_list(k).x_coordinate = rand()*250; % 250 feets
     Nodes_list(k).y_coordinate = rand()*250; % 250 feets
-    
-    % Store node x and y coordinate to draw network topology later
-    Nodes_cooordinates(k,1) = Nodes_list(k).x_coordinate;
-    Nodes_cooordinates(k,2) = Nodes_list(k).y_coordinate;
     
     Nodes_list(k).buffer = [];
     Nodes_list(k).neighbors = [];
@@ -34,12 +31,21 @@ for k=1:numNodes
     
     AP_Connections = [];
     if(mod(round(rand(1)*100), k) == 0)
+        issid = issid + 1;
+        
         Connection.through_neighbor = k; % need a function for this
         Connection.num_hops = 1; % need a function for this
         AP_Connections = [AP_Connections; Connection]; 
         Nodes_list(k).AP_Connections = AP_Connections;
         clear Connection;
         clear AP_Connections;
+        
+        % Add new Access Point into APs_list
+        AP = [];
+        AP.issid = strcat('AP#', num2str(issid));
+        AP.x_coordinate = Nodes_list(k).x_coordinate + 5;
+        AP.y_coordinate = Nodes_list(k).y_coordinate + 5;
+        APs_list = [APs_list; AP];  
     end    
 end
 
@@ -51,7 +57,7 @@ scale_display_nodes_info(Nodes_list);
 % disp(Nodes_cooordinates);
 
 % Not allow to pass a matrix to  function
-% scale_draw_network_topology(Nodes_coordinates,  250, 250);
+scale_draw_network_topology(Nodes_list, APs_list, 250, 250);
 
 % Initial broadcast join messages
 for k=1:numNodes
@@ -81,7 +87,7 @@ end
 
 % Display nodes' info after running network initialization
 disp(sprintf('\n New Network Information after Initialization\n'));
-scale_display_nodes_info(Nodes_list);
+% scale_display_nodes_info(Nodes_list);
 
 % Now, it is time to run network topology and generate events to 
 % be sent to its access points, every while loop will count as 
