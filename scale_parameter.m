@@ -19,6 +19,8 @@ global maxx;
 global maxy;
 global maxEvents;
 global eventsPeriod;
+global maxRandomSleepingTime;
+global maxRandomActiveTime;
 
 %=======================================
 
@@ -41,3 +43,6 @@ maxx = 250; % feet
 maxy = 250; % feet
 maxEvents = 1000;
 eventsPeriod = 3600; % 3600 second or 1 hour
+
+maxRandomSleepingTime = 5; % 5 second;
+maxRandomActiveTime = 5; % 5 second;

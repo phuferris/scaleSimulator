@@ -5,7 +5,7 @@ while(i < numEvents)
     event = [];
     event.source = round(rand()*numNodes) - 1;
     event.destination = 99999; % address of remote server on the cloud
-    event.created_at = rand()*eventsPeriod;
+    event.instant = rand()*eventsPeriod;
     event.size = rand()*100*8; % 100 kb max
     
     %disp(sprintf('event info generated at %g ', event.created_at));

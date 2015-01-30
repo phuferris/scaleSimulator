@@ -10,6 +10,7 @@ global maxx;
 global maxy;
 global maxEvents;
 global eventsPeriod;
+global maxRandomActiveTime;
 
 Nodes_list = [];
 APs_list = [];
@@ -28,9 +29,8 @@ for k=1:numNodes
     Nodes_list(k).neighbors = [];
     Nodes_list(k).status = 0; % get_status(node_id, neighors), 0 = sleep, 1 = active
     Nodes_list(k).power = initial_power;
-    Nodes_list(k).next_idle_time = rand()*5; %random 5 second when it is started
-    Nodes_list(k).active_time_left = rand()*5; %random 5 second when it is started
-    Nodes_list(k).sleeping_time_left = 0; %random 5 second when it is started
+    Nodes_list(k).active_time_left = round(rand()*maxRandomActiveTime); %random 5 second when it is started
+    Nodes_list(k).sleeping_time_left = 0; % 0 seconds when it is started
     Nodes_list(k).AP_Connections = [];
     
     AP_Connections = [];
@@ -74,7 +74,7 @@ scale_display_nodes_info(Nodes_list);
 % within 1 hour
 
 Events_list = [];
-Eevents_list = scale_generate_initial_events(Events_list, numNodes, 5, eventsPeriod);
+Eevents_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, eventsPeriod);
 
 
 

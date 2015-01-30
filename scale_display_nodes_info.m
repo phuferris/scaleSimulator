@@ -3,7 +3,7 @@ function scale_display_nodes_info(Nodes_list)
     
     for k=1:numel(Nodes_list)
        disp(sprintf('--- Node ID:  %d, X coordinate: %g, Y coordinate: %g', Nodes_list(k).id,  Nodes_list(k).x_coordinate,  Nodes_list(k).y_coordinate));
-       disp(sprintf('--- Status:  %d, Initial Power: %g mAh, Next idle time: %g seconds', Nodes_list(k).status, Nodes_list(k).power, Nodes_list(k).next_idle_time));
+       disp(sprintf('--- Status:  %d, Initial Power: %g mAh, Next idle time: %g seconds', Nodes_list(k).status, Nodes_list(k).power, Nodes_list(k).sleeping_time_left));
        
        % Display connection to AP list
        for index = 1:numel(Nodes_list(k).AP_Connections)
