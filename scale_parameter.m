@@ -15,6 +15,11 @@ global sending_power;
 global receiving_power; % Mb per mAh
 global computation_power;
 
+global maxx;
+global maxy;
+global maxEvents;
+global eventsPeriod;
+
 %=======================================
 
 numNodes = 25;
@@ -31,3 +36,8 @@ sending_power = 2; % Mb per mAh
 receiving_power = 1; % Mb per mAh
 
 computation_power = 0.005; % mAh
+
+maxx = 250; % feet
+maxy = 250; % feet
+maxEvents = 1000;
+eventsPeriod = 3600; % 3600 second or 1 hour
