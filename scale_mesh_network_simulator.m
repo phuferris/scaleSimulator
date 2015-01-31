@@ -47,6 +47,7 @@ for k=1:numNodes
         % Add new Access Point into APs_list
         AP = [];
         AP.issid = strcat('AP#', num2str(issid));
+        AP.connect_nodeid = k;     %direct connection node id
         AP.x_coordinate = Nodes_list(k).x_coordinate + 5;
         AP.y_coordinate = Nodes_list(k).y_coordinate + 5;
         APs_list = [APs_list; AP];  
@@ -61,7 +62,7 @@ scale_display_nodes_info(Nodes_list);
 % disp(Nodes_cooordinates);
 
 % Not allow to pass a matrix to  function
-scale_draw_network_topology(Nodes_list, APs_list, maxx, maxy);
+%scale_draw_network_topology(Nodes_list, APs_list, maxx, maxy);
 
 % Initial broadcast join messages
 Nodes_list = scale_initial_broadcast_join(Nodes_list);
@@ -69,6 +70,7 @@ Nodes_list = scale_initial_broadcast_join(Nodes_list);
 % Display nodes' info after running network initialization
 disp(sprintf('\n New Network Information after Initialization\n'));
 scale_display_nodes_info(Nodes_list);
+scale_draw_network_topology(Nodes_list, APs_list, maxx, maxy); % draw network with neighbor connections
 
 %Generate initial events which could occur within the SCALE network
 % within 1 hour
