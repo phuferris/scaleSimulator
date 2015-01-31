@@ -10,7 +10,7 @@ box on;
 
 for k=1:numel(Nodes_list)
     % plot wireless sensor nodes  
-    plot(Nodes_list(k).x_coordinate,Nodes_list(k).y_coordinate,'k.', 'MarkerSize', 15);
+    plot(Nodes_list(k).x_coordinate,Nodes_list(k).y_coordinate,'k.', 'MarkerSize', 30);
     
     %connect neighbors
 if (~isempty(Nodes_list(k).neighbors))
@@ -22,7 +22,7 @@ end
 
 for k=1:numel(APs_list)
 % plot wireless access points
-plot(APs_list(k).x_coordinate,APs_list(k).y_coordinate, 'b.', 'MarkerSize', 20);
+plot(APs_list(k).x_coordinate,APs_list(k).y_coordinate, 'b.', 'MarkerSize', 45);
 %connect access points to nodes
 plot([APs_list(k).x_coordinate, Nodes_list(APs_list(k).connect_nodeid).x_coordinate], [APs_list(k).y_coordinate, Nodes_list(APs_list(k).connect_nodeid).y_coordinate], 'b-');
 end
