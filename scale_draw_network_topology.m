@@ -1,26 +1,6 @@
 function scale_draw_network_topology(Nodes_list, APs_list, maxx, maxy)
 % make background white, run only once
 
-numNodes = numel(Nodes_list);
-Nodes_coordinates = zeros(numNodes, 2);
-
-numAPs = numel(APs_list);
-APs_coordinates = zeros(numAPs, 2);
-
-% Initialize sensor direct connection to a nearest Access Point AP
-% Initialize sensor status 
-for k=1:numNodes
-    % Store node x and y coordinate to draw network topology later
-    Nodes_coordinates(k,1) = Nodes_list(k).x_coordinate;
-    Nodes_coordinates(k,2) = Nodes_list(k).y_coordinate;
-end
-
-for k=1:numAPs
-    % Store node x and y coordinate to draw network topology later
-    APs_coordinates(k,1) = APs_list(k).x_coordinate;
-    APs_coordinates(k,2) = APs_list(k).y_coordinate;
-end
-
 colordef none,  whitebg
 
 figure(1);
@@ -28,11 +8,26 @@ axis equal
 hold on;
 box on;
 
-% plot wireless sensor nodes ;
-plot(Nodes_coordinates(:, 1), Nodes_coordinates(:, 2), 'k.', 'MarkerSize', 30);
+for k=1:numel(Nodes_list)
+    % plot wireless sensor nodes  
+    plot(Nodes_list(k).x_coordinate,Nodes_list(k).y_coordinate,'k.', 'MarkerSize', 15);
+    
+    %connect neighbors
+if (~isempty(Nodes_list(k).neighbors))
+    for n=1:numel(Nodes_list(k).neighbors)
+        plot([Nodes_list(k).x_coordinate, Nodes_list(k).neighbors(n).node_x_coordinate],[Nodes_list(k).y_coordinate, Nodes_list(k).neighbors(n).node_y_coordinate],'m-');
+    end
+end
+end
 
+for k=1:numel(APs_list)
 % plot wireless access points
-plot(APs_coordinates(:, 1), APs_coordinates(:, 2), 'c.', 'MarkerSize', 50);
+plot(APs_list(k).x_coordinate,APs_list(k).y_coordinate, 'b.', 'MarkerSize', 20);
+%connect access points to nodes
+plot([APs_list(k).x_coordinate, Nodes_list(APs_list(k).connect_nodeid).x_coordinate], [APs_list(k).y_coordinate, Nodes_list(APs_list(k).connect_nodeid).y_coordinate], 'b-');
+end
+
+hold off;
 
 title('SCALE Network Topology');
     
