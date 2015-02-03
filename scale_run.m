@@ -14,7 +14,7 @@ while 1
            
            % Check to see if it has any any event from the event queue
            if(~isempty(event) && event.instant == clock && event.source == k)
-               newEvents = scale_send_event(event); % get new events from sending the latest one
+               Nodes_list = scale_send_event(Nodes_list, event); % get new events from sending the latest one
                Events_list(min_index) = [];
                if(~isempty(newEvents))
                    Events_list = [Events_list; newEvents];
@@ -22,7 +22,7 @@ while 1
            end
 
            % Send out beacon message to annouce its active
-           Nodes_list = scale_send_beacon_message(Nodes_list, k);
+           Nodes_list = scale_send_beacon_message(Nodes_list, k, message);
            
            if Nodes_list(k).active_time_left == 0
                Nodes_list(k).status = 0;

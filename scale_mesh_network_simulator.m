@@ -11,6 +11,7 @@ global maxy;
 global maxEvents;
 global eventsPeriod;
 global maxRandomActiveTime;
+global APs_list;
 
 Nodes_list = [];
 APs_list = [];
@@ -28,6 +29,7 @@ for k=1:numNodes
     Nodes_list(k).buffer = [];
     Nodes_list(k).neighbors = [];
     Nodes_list(k).status = 0; % get_status(node_id, neighors), 0 = sleep, 1 = active
+    Nodes_list(k).on_duty = 0; % 0 is not fowarding neighbors' traffic, 1 is
     Nodes_list(k).power = initial_power;
     Nodes_list(k).active_time_left = round(rand()*maxRandomActiveTime); %random 5 second when it is started
     Nodes_list(k).sleeping_time_left = 0; % 0 seconds when it is started
@@ -37,20 +39,25 @@ for k=1:numNodes
     if(mod(round(rand(1)*100), k) == 0)
         issid = issid + 1;
         
-        Connection.through_neighbor = k; % need a function for this
-        Connection.num_hops = 1; % need a function for this
-        AP_Connections = [AP_Connections; Connection]; 
-        Nodes_list(k).AP_Connections = AP_Connections;
-        clear Connection;
-        clear AP_Connections;
-        
-        % Add new Access Point into APs_list
+         % Add new Access Point into APs_list
         AP = [];
-        AP.issid = strcat('AP#', num2str(issid));
+        AP.issid = issid;
         AP.connect_nodeid = k;     %direct connection node id
         AP.x_coordinate = Nodes_list(k).x_coordinate + 5;
         AP.y_coordinate = Nodes_list(k).y_coordinate + 5;
-        APs_list = [APs_list; AP];  
+        AP.arrived_events = 0;
+        APs_list = [APs_list; AP]; 
+        
+        Connection.through_neighbor = k; % need a function for this
+        Connection.num_hops = 1; % need a function for this
+        Connection.AP_issid = AP.issid;
+        AP_Connections = [AP_Connections; Connection]; 
+        Nodes_list(k).AP_Connections = AP_Connections;
+        
+        clear Connection;
+        clear AP_Connections;
+        clear AP;
+         
     end    
 end
 
@@ -79,7 +86,7 @@ Events_list = [];
 Eevents_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, eventsPeriod);
 
 
-
+scale_send_to_AP(1);
 
 % Now, it is time to run network topology and generate events to 
 % be sent to its access points, every while loop will count as 
