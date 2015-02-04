@@ -8,7 +8,7 @@ function scale_display_nodes_info(Nodes_list)
        % Display connection to AP list
        for index = 1:numel(Nodes_list(k).AP_Connections)
            AP_connection = Nodes_list(k).AP_Connections(index);
-           disp(sprintf('--- AP connection: through node ID# %d by %d hops', AP_connection.through_neighbor, AP_connection.num_hops));
+           disp(sprintf('--- AP connection: through node ID# %d by %d hops, AP Issid %s', AP_connection.through_neighbor, AP_connection.num_hops, AP_connection.AP_issid));
        end
        
        
