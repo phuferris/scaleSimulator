@@ -20,9 +20,37 @@ while 1
                    Events_list = [Events_list; newEvents];
                end
            end
+         
+    % beacon message
+    message=[];
+    message.id=k;
+    message.node_x_coordinate = nodes_list(k).x_coordinate;
+    message.node_y_coordinate = nodes_list(k).y_coordinate;
+    
+    if(~isempty(nodes_list(k).AP_Connections))
+        message.AP_connection = 1;
+        
+        node_AP_connections = nodes_list(k).AP_Connections;
+        message.AP_connection_through_node_id = node_AP_connections.through_neighbor;
+        message.AP_connection_hop_count = node_AP_connections.num_hops + 1;
+    else
+        message.AP_connection = 0;
+        message.AP_connection_through_node_id = 0;
+        message.AP_connection_hop_count = 0;
+    end
+    
+    %power left after sending beacon
+    action = [];
+    action.type = 'broadcast_beacon';
+    nodes_list(k).power= scale_power_consumption(nodes_list(k).power, action);
+    message.power_status = nodes_list(k).power;
+
+    message.sleeping_time_left = nodes_list(k).sleeping_time_left;  %need update (re-calculate)? 
+    message.active_time_left = nodes_list(k).active_time_left;        %need re-calculate? If so, have to use get time function with sleep protocol 
+
 
            % Send out beacon message to annouce its active
-           Nodes_list = scale_send_beacon_message(Nodes_list, k);
+           Nodes_list = scale_send_beacon_message(Nodes_list, k, message);
            
            if Nodes_list(k).active_time_left == 0
                Nodes_list(k).status = 0;
