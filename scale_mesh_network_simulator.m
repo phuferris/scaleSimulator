@@ -39,7 +39,7 @@ for k=1:numNodes
     
     AP_Connections = [];
     random_AP = mod(round(rand(1)*100), k);
-    if(random_AP == 0 || random_AP == 1 || random_AP == 3)
+    if(random_AP == 0 || random_AP == 1 || random_AP == 1)
         issid = issid + 1;
         
          % Add new Access Point into APs_list
@@ -95,7 +95,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % Create Andy branch
 
 % First sleeping schema: every node stay awake
-scale_run_all_active(Nodes_list, Events_list, 100);
+scale_run_all_active(Nodes_list, Events_list, 1000);
 
 disp(sprintf('Total events sent: %d', sentEvents));
 
