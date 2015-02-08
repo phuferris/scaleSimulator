@@ -22,11 +22,22 @@ for k=1:numel(Nodes_list)
         message.AP_connection_hop_count = 0;
         message.AP_connection_AP_issid = 0;
     end
-                
+     %power left after sending beacon
+       
     action = [];
     action.type = 'broadcast_join';
+    Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
     
+    %neighbor fields needs to be consistent as fields updated in beacon
+  %messages (they need to exist, else compile error)
+   message.power_status = Nodes_list(k).power;
+   
+   message.sleeping_time_left = Nodes_list(k).sleeping_time_left;
+   message.active_time_left = Nodes_list(k).active_time_left;    
+   
    Nodes_list = scale_broadcast_join(Nodes_list, message);
-   Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+   
+   
+ 
 end
 return;
