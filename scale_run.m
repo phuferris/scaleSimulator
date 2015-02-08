@@ -1,4 +1,4 @@
-function [Nodes_list] = scale_run(Nodes_list, Events_list, max_run_time, log_file, spleeping_protocol)
+function [Nodes_list] = scale_run(Nodes_list, Events_list, max_run_time, spleeping_protocol)
 
 clock = 0;
 
@@ -6,9 +6,19 @@ clock = 0;
 while 1
     clock = clock + 1;
     [min_instant, min_index] = min([Events_list(:).instant]);
+    
+    if (clock > max_run_time)
+        break;
+    end
     event = Events_list(min_index);
     
+    disp(sprintf('Min instant %f, min index %d', min_instant, min_index));
+    disp(sprintf('event info '));
+    disp(event);
+    
     for k=1:numel(Nodes_list)
+        disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
+        
         if Nodes_list(k).status == 1
            Nodes_list(k).active_time_left = Nodes_list(k).active_time_left - 1;
            
@@ -20,9 +30,10 @@ while 1
                    Events_list = [Events_list; newEvents];
                end
            end
+           
 
            % Send out beacon message to annouce its active
-           Nodes_list = scale_send_beacon_message(Nodes_list, k, message);
+           % Nodes_list = scale_send_beacon_message(Nodes_list, k, message);
            
            if Nodes_list(k).active_time_left == 0
                Nodes_list(k).status = 0;

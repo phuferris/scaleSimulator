@@ -21,6 +21,7 @@ global maxEvents;
 global eventsPeriod;
 global maxRandomSleepingTime;
 global maxRandomActiveTime;
+global sentEvents;
 
 %=======================================
 
@@ -34,15 +35,16 @@ beacon_message_size = 0.3; % Mb
 
 sleeping_power = 0.001; % mAh per sec
 active_power = 0.01; % mAh per sec
-sending_power = 2; % Mb per mAh
-receiving_power = 1; % Mb per mAh
+sending_power = 0.2; % Mb per mAh
+receiving_power = 0.1; % Mb per mAh
 
 computation_power = 0.005; % mAh
 
 maxx = 250; % feet
 maxy = 250; % feet
-maxEvents = 1000;
+maxEvents = 5000;
 eventsPeriod = 3600; % 3600 second or 1 hour
 
 maxRandomSleepingTime = 5; % 5 second;
 maxRandomActiveTime = 5; % 5 second;
+
