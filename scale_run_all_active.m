@@ -27,6 +27,41 @@ while 1
     end
     
     for k=1:numel(Nodes_list)
+        
+        % Send beacon message to neighbors to update
+        % its current status for every 10 seconds
+        if mod(clock, 10) == 0
+            message = [];
+            message.id = Nodes_list(k).id;
+            message.status = Nodes_list(k).status;
+            message.node_x_coordinate = Nodes_list(k).x_coordinate;
+            message.node_y_coordinate = Nodes_list(k).y_coordinate;
+    
+            if(~isempty(Nodes_list(k).AP_Connections))
+                message.AP_connection = 1;
+                node_AP_connections = Nodes_list(k).AP_Connections;
+                message.AP_connection_through_node_id = node_AP_connections.through_neighbor;
+                message.AP_connection_hop_count = node_AP_connections.num_hops + 1;
+                message.AP_connection_AP_issid = node_AP_connections.AP_issid;
+            else
+                message.AP_connection = 0;
+                message.AP_connection_through_node_id = 0;
+                message.AP_connection_hop_count = 0;
+                message.AP_connection_AP_issid = 0;
+            end
+            
+            message.power_status = Nodes_list(k).power;
+   
+            message.sleeping_time_left = Nodes_list(k).sleeping_time_left;
+            message.active_time_left = Nodes_list(k).active_time_left;    
+            
+            Nodes_list = scale_send_beacon_message(Nodes_list, k, message);
+            
+            action = [];
+            action.type = 'broadcast_beacon';
+            Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+        end
+        
         event = [];
         if ~isempty(events)
             event_index = find([events(:).source] == k, 1);

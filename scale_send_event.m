@@ -10,7 +10,10 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
     
     action = [];
     action.type = 'sending';
-    action.packet_size = event.size;        
+    action.packet_size = event.size; 
+    
+    action_computing = [];
+    action_computing.type = 'computing';
             
     current_node = Nodes_list(event.source);
     current_node_neighbors = current_node.neighbors;
@@ -65,9 +68,7 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
             
             % Reduce node power due to finding
             % the best neighbor to forward event operation
-            action = [];
-            action.type = 'computing';
-            current_node.power = scale_power_consumption(current_node.power, action);
+            current_node.power = scale_power_consumption(current_node.power, action_computing);
 
             if(node_AP_connections.through_neighbor ~= 0)
                 disp(sprintf('Found a neighbor that can forward event to an AP'));

@@ -24,11 +24,8 @@ for k=1:numel(Nodes_list)
     end
      %power left after sending beacon
        
-    action = [];
-    action.type = 'broadcast_join';
-    Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
     
-    %neighbor fields needs to be consistent as fields updated in beacon
+  %neighbor fields needs to be consistent as fields updated in beacon
   %messages (they need to exist, else compile error)
    message.power_status = Nodes_list(k).power;
    
@@ -37,7 +34,9 @@ for k=1:numel(Nodes_list)
    
    Nodes_list = scale_broadcast_join(Nodes_list, message);
    
-   
+   action = [];
+   action.type = 'broadcast_join';
+   Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
  
 end
 return;

@@ -95,7 +95,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % Create Andy branch
 
 % First sleeping schema: every node stay awake
-scale_run_all_active(Nodes_list, Events_list, 1000);
+scale_run_all_active(Nodes_list, Events_list, 3600);
 
 disp(sprintf('Total events sent: %d', sentEvents));
 

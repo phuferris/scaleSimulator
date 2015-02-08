@@ -15,6 +15,12 @@ function [Nodes_list] = scale_send_to_neighbor(Nodes_list, event, neighbor_id)
         if Nodes_list(neighbor_id).status == 1 && Nodes_list(neighbor_id).on_duty == 1
            % add the event into the neighbor's buffer
            event.source = neighbor_id;
+           
+           action = [];
+           action.type = 'receiving';
+           action.packet_size = event.size;
+           Nodes_list(neighbor_id).power = scale_power_consumption(Nodes_list(neighbor_id).power, action);
+           
            Nodes_list = scale_send_event(Nodes_list, event); 
         else
            Nodes_list(neighbor_id).buffer = [Nodes_list(neighbor_id).buffer, event];
