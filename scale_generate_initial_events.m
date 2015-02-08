@@ -4,8 +4,9 @@ function [Events_list] = scale_generate_initial_events(Events_list, numNodes, nu
 
 i = 0;
 while(i < numEvents)
-    event = [];
+    event = []; 
     event.source = round(rand()*numNodes) - 1;
+    event.originator = event.source;
     event.destination = 99999; % address of remote server on the cloud
     event.instant = ceil(rand()*eventsPeriod);
     event.size = rand()*100*8; % 100 kb max

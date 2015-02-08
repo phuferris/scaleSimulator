@@ -4,6 +4,11 @@ function [Nodes_list] = scale_send_to_neighbor(Nodes_list, event, neighbor_id)
         return;
     end
     
+    % Drop the message if the node is its originator
+    if event.originator == neighbor_id
+        return
+    end
+    
     disp(sprintf('neighbor ID %d', neighbor_id));
     
     if ~isempty(Nodes_list(neighbor_id))

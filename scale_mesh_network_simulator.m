@@ -12,7 +12,7 @@ global maxEvents;
 global eventsPeriod;
 global maxRandomActiveTime;
 global APs_list;
-global sentEvent;
+global sentEvents;
 
 Nodes_list = [];
 APs_list = [];

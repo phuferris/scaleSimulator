@@ -21,7 +21,8 @@ global maxEvents;
 global eventsPeriod;
 global maxRandomSleepingTime;
 global maxRandomActiveTime;
-global sentEvents;
+
+global bufferSize;
 
 %=======================================
 
@@ -47,4 +48,6 @@ eventsPeriod = 3600; % 3600 second or 1 hour
 
 maxRandomSleepingTime = 5; % 5 second;
 maxRandomActiveTime = 5; % 5 second;
+
+bufferSize = 100; % 100 events max
 

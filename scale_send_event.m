@@ -1,5 +1,9 @@
 function [Nodes_list] = scale_send_event(Nodes_list, event)
 % Send an event from a node to an access point or a neighbor node
+
+    scale_parameter;
+    global bufferSize;
+
     if isempty(Nodes_list(event.source))
         return;
     end
@@ -30,7 +34,9 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
                 current_node.power = scale_power_consumption(current_node.power, action);
             
             else
-                current_node.buffer = [current_node.buffer; event];
+                if numel(current_node.buffer) < bufferSize
+                    current_node.buffer = [current_node.buffer; event];
+                end
             end
         end
     else
@@ -70,10 +76,14 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
                 current_node.power = scale_power_consumption(current_node.power, action);
                 
             else % no neighbor is active or has connection to an AP, buffering the event
-                current_node.buffer = [current_node.buffer; event];
+                if numel(current_node.buffer) < bufferSize
+                    current_node.buffer = [current_node.buffer; event];
+                end
             end
         else
-            current_node.buffer = [current_node.buffer; event];
+            if numel(current_node.buffer) < bufferSize
+                current_node.buffer = [current_node.buffer; event];
+            end
         end      
     end
     
