@@ -25,6 +25,9 @@ ylim([ 0, initial_power+500]);% Increase y limit for labels
             percent=round(Nodes_list(n).power/initial_power*100);
             text(xpos,ypos,[num2str(percent), '%'],'HorizontalAlignment','left','Rotation',90);        
     end
+    
+    
+end
 
 
 
