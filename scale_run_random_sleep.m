@@ -115,6 +115,7 @@ while 1
            end
            
         else %Node is sleeping
+            disp(sprintf('node is sleeping'));
             action = [];
             action.type = 'sleeping';
             action.time = 1;
@@ -131,5 +132,6 @@ while 1
 end
 
 scale_display_nodes_info(Nodes_list);
+scale_power_graph(Nodes_list);
 
 return;
