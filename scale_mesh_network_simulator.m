@@ -35,6 +35,7 @@ for k=1:numNodes
     Nodes_list(k).power = initial_power;
     Nodes_list(k).active_time_left = 0; % initial value
     Nodes_list(k).sleeping_time_left = 0; % 0 initial value
+    Nodes_list(k).beacon_broadcasted = 0; % 0 initial value
     Nodes_list(k).AP_Connections = [];
     
     AP_Connections = [];

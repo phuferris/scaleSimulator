@@ -11,7 +11,10 @@ end
 
 clock = 0;
 sentEvents = 0;
-% 
+
+
+% Loop until clock is reach 
+% the maximum run time thredhold
 while 1
     clock = clock + 1;
     
@@ -28,34 +31,16 @@ while 1
     
     for k=1:numel(Nodes_list)
         
+        action = [];
+        action.type = 'active';
+        action.time = 1;
+        Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+        
         % Send beacon message to neighbors to update
         % its current status for every 10 seconds
         if mod(clock, 10) == 0
-            message = [];
-            message.id = Nodes_list(k).id;
-            message.status = Nodes_list(k).status;
-            message.node_x_coordinate = Nodes_list(k).x_coordinate;
-            message.node_y_coordinate = Nodes_list(k).y_coordinate;
-    
-            if(~isempty(Nodes_list(k).AP_Connections))
-                message.AP_connection = 1;
-                node_AP_connections = Nodes_list(k).AP_Connections;
-                message.AP_connection_through_node_id = node_AP_connections.through_neighbor;
-                message.AP_connection_hop_count = node_AP_connections.num_hops + 1;
-                message.AP_connection_AP_issid = node_AP_connections.AP_issid;
-            else
-                message.AP_connection = 0;
-                message.AP_connection_through_node_id = 0;
-                message.AP_connection_hop_count = 0;
-                message.AP_connection_AP_issid = 0;
-            end
-            
-            message.power_status = Nodes_list(k).power;
-   
-            message.sleeping_time_left = Nodes_list(k).sleeping_time_left;
-            message.active_time_left = Nodes_list(k).active_time_left;    
-            
-            Nodes_list = scale_send_beacon_message(Nodes_list, k, message);
+
+            Nodes_list = scale_send_beacon_message(Nodes_list, k);
             
             action = [];
             action.type = 'broadcast_beacon';
@@ -77,6 +62,21 @@ while 1
             disp(sprintf('Found 1 event for node #%d, Sent the event to its destination', k));
             disp(event);   
             Nodes_list = scale_send_event(Nodes_list, event); 
+        
+        % Check to see if there is any event in the buffer to be sent    
+        else
+            if(~isempty(Nodes_list(k).buffer))
+               buffered_event = Nodes_list(k).buffer(1); % pick to the oldest event 
+
+               disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
+               %disp(sprintf('Buffer Event instant %d, currrent clock %d, buffer event source %d', buffered_event.instant, clock, buffered_event.source));
+               disp(sprintf('Found 1 event for node #%d, Sent the event to its destination', k));
+
+               disp(buffered_event);   
+
+               Nodes_list(k).buffer(1) = []; % remove sent event from buffer
+               Nodes_list = scale_send_event(Nodes_list, buffered_event);
+            end
         end   
     end
 end

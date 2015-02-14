@@ -23,6 +23,7 @@ global maxRandomSleepingTime;
 global maxRandomActiveTime;
 
 global bufferSize;
+global wakeup_power;
 
 %=======================================
 
@@ -50,4 +51,5 @@ maxRandomSleepingTime = 5; % 5 second;
 maxRandomActiveTime = 5; % 5 second;
 
 bufferSize = 100; % 100 events max
+wakeup_power = 0.3;  % mAh
 

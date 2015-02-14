@@ -8,6 +8,7 @@ function [node_power] = scale_power_consumption(node_power, action)
     global sending_power;
     global receiving_power; 
     global computation_power;
+    global wakeup_power;
     
     power_required = 0;
     if(strcmp(action.type, 'broadcast_join'))
@@ -36,6 +37,10 @@ function [node_power] = scale_power_consumption(node_power, action)
     
     if(strcmp(action.type, 'computing'))
         power_required = computation_power;
+    end
+    
+    if(strcmp(action.type, 'wakeup'))
+        power_required = wakeup_power;
     end
     
     %disp(sprintf('Node power %f, required_power %f', node_power, power_required));
