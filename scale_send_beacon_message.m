@@ -48,3 +48,6 @@ function [nodes_list] = scale_send_beacon_message(nodes_list, k)
     end
     return;
 end
+
+
+end

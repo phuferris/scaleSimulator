@@ -82,5 +82,5 @@ while 1
 end
 
 scale_display_nodes_info(Nodes_list);
-
+scale_power_graph(Nodes_list);
 return;
