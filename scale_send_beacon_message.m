@@ -22,3 +22,6 @@ for n=1:numel(nodes_list(k).neighbors)
         end
     end
 end
+
+
+end
