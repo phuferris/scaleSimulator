@@ -2,6 +2,7 @@ function [TotPower]=scale_run_random_sleep(Nodes_list, Events_list, max_run_time
 % Simulate SCALE network when all nodes are kept active
 
 global sentEvents;
+global forwardedEvents;
 
 % Initialize nodes' active and inactive time
 for k=1:numel(Nodes_list)
@@ -11,8 +12,8 @@ end
 
 clock = 0;
 sentEvents = 0;
-
 forwardedEvents = 0;
+scale_reset_events_arrived_at_APs();
 
 beacon_broadcast_action = [];
 beacon_broadcast_action.type = 'broadcast_beacon';
@@ -20,9 +21,18 @@ beacon_broadcast_action.type = 'broadcast_beacon';
 while 1
     clock = clock + 1;
     
+    % Check to see if the network topology is still active
+    network_status = scale_check_topology_connectors(Nodes_list);
+    if network_status == 0
+       disp(sprintf('At clock %d, all nodes that have access to APs are died', clock));
+       break;
+    end
+    
     if (clock > max_run_time)
         break;
     end
+    
+    
     
     events = [];
     events = scale_get_events(Events_list, events, clock);
@@ -61,10 +71,10 @@ while 1
         
            % Check to see if it has any any event from the event queue
            if(~isempty(event) && event.instant == clock && event.source == k)
-               disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
-               disp(sprintf('Event instant %d, currrent clock %d, event source %d', event.instant, clock, event.source));
-               disp(sprintf('Found 1 event for node #%d, Sent the event to its destination', k));
-               disp(event);  
+               %disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
+               %disp(sprintf('Event instant %d, currrent clock %d, event source %d', event.instant, clock, event.source));
+               %disp(sprintf('Found 1 event for node #%d, Sent the event to its destination', k));
+               %disp(event);  
                
                % Node has event of its own, start to send 
                % or forward it. 

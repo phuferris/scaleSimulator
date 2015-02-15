@@ -14,10 +14,17 @@ global eventsPeriod;
 global maxRandomActiveTime;
 global APs_list;
 global sentEvents;
+global forwardedEvents;
+global totalReceived;
 
 Nodes_list = [];
+
+sentStatistics = [];
+
 APs_list = [];
 sentEvents = 0;
+forwardedEvents = 0;
+totalReceived = 0;
 
 Nodes_coordinates = zeros(numNodes, 2);
 
@@ -47,7 +54,7 @@ for k=1:numNodes
          % Add new Access Point into APs_list
         AP = [];
         AP.issid = issid;
-        AP.connect_nodeid = k;     %direct connection node id
+        AP.connect_node_id = k;     %direct connection node id
         AP.x_coordinate = Nodes_list(k).x_coordinate + 5;
         AP.y_coordinate = Nodes_list(k).y_coordinate + 5;
         AP.arrived_events = 0;
@@ -94,29 +101,33 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-% Create Andy branch
+max_run_time = 2660;
 
+%
 % First sleeping schema: every node stay awake
-Execute_Nodes_list = Nodes_list; 
-ActPower=scale_run_all_active(Execute_Nodes_list, Events_list, 360);
-clear Execute_Nodes_list;
+ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
 
-disp(sprintf('Total events sent in all active: %d', sentEvents));
-
+%}
 scale_get_events_arrived_at_APs();
+sentStatistics.act_sentEvent = sentEvents;
+sentStatistics.act_forwardedEvents = forwardedEvents;
+sentStatistics.act_totalReceived = totalReceived;
 
 %
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
-Execute_Nodes_list = Nodes_list; 
-sentEvents = 0;
-RandPower=scale_run_random_sleep(Execute_Nodes_list, Events_list, 36);
-clear Execute_Nodes_list;
-
-disp(sprintf('Total events sent in Ramdon sleep: %d', sentEvents));
+RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
 
 scale_get_events_arrived_at_APs();
 scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0);
 
+sentStatistics.random_sentEvent = sentEvents;
+sentStatistics.random_forwardedEvents = forwardedEvents;
+sentStatistics.random_totalReceived = totalReceived;
+
+disp(sprintf('Sent Statistics'));
+disp(sentStatistics);
+
+%}
 
 

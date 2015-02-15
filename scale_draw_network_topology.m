@@ -25,7 +25,7 @@ for k=1:numel(APs_list)
 plot(APs_list(k).x_coordinate,APs_list(k).y_coordinate, 'b.', 'MarkerSize', 20);
 text(APs_list(k).x_coordinate+5, APs_list(k).y_coordinate+0.1, num2str(k),'Color','g');
 %connect access points to nodes
-plot([APs_list(k).x_coordinate, Nodes_list(APs_list(k).connect_nodeid).x_coordinate], [APs_list(k).y_coordinate, Nodes_list(APs_list(k).connect_nodeid).y_coordinate], 'b-');
+plot([APs_list(k).x_coordinate, Nodes_list(APs_list(k).connect_node_id).x_coordinate], [APs_list(k).y_coordinate, Nodes_list(APs_list(k).connect_node_id).y_coordinate], 'b-');
 end
 
 hold off;
