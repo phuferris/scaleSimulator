@@ -1,6 +1,7 @@
 % Simulation for SCALE Wireless Sensor Box
 
 clear;
+close all;
 
 scale_parameter;
 
@@ -95,29 +96,27 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 
 % Create Andy branch
 
-%
 % First sleeping schema: every node stay awake
 Execute_Nodes_list = Nodes_list; 
-scale_run_all_active(Execute_Nodes_list, Events_list, 360);
+ActPower=scale_run_all_active(Execute_Nodes_list, Events_list, 360);
 clear Execute_Nodes_list;
 
 disp(sprintf('Total events sent in all active: %d', sentEvents));
 
 scale_get_events_arrived_at_APs();
-%}
 
-%{
+%
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
 Execute_Nodes_list = Nodes_list; 
 sentEvents = 0;
-scale_run_random_sleep(Execute_Nodes_list, Events_list, 360);
+RandPower=scale_run_random_sleep(Execute_Nodes_list, Events_list, 36);
 clear Execute_Nodes_list;
 
 disp(sprintf('Total events sent in Ramdon sleep: %d', sentEvents));
 
 scale_get_events_arrived_at_APs();
-%}
+scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0);
 
 
 

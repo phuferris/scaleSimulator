@@ -1,4 +1,4 @@
-function scale_run_all_active(Nodes_list, Events_list, max_run_time)
+function [TotPower]=scale_run_all_active(Nodes_list, Events_list, max_run_time)
 % Simulate SCALE network when all nodes are kept active
 
 global sentEvents;
@@ -83,7 +83,9 @@ while 1
     end
 end
 
+
 disp(sprintf('Total forwarded events: %d', forwardedEvents));
 %scale_display_nodes_info(Nodes_list);
-scale_power_graph(Nodes_list);
+TotPower=scale_power_graph(Nodes_list,'All Active');
+
 return;
