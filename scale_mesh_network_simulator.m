@@ -116,7 +116,7 @@ clear Execute_Nodes_list;
 disp(sprintf('Total events sent in Ramdon sleep: %d', sentEvents));
 
 scale_get_events_arrived_at_APs();
-scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Fixed','Customize', ActPower,RandPower,0,0);
+scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower,RandPower,0);
 
 
 
