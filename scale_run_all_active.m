@@ -12,6 +12,8 @@ end
 clock = 0;
 sentEvents = 0;
 
+forwardedEvents = 0;
+
 
 % Loop until clock is reach 
 % the maximum run time thredhold
@@ -24,10 +26,6 @@ while 1
     
     events = [];
     events = scale_get_events(Events_list, events, clock);
-    
-    if ~isempty(events)
-        sentEvents = sentEvents + numel(events);
-    end
     
     for k=1:numel(Nodes_list)
         
@@ -60,7 +58,9 @@ while 1
             disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
             disp(sprintf('Event instant %d, currrent clock %d, event source %d', event.instant, clock, event.source));
             disp(sprintf('Found 1 event for node #%d, Sent the event to its destination', k));
-            disp(event);   
+            disp(event);
+            
+            sentEvents = sentEvents + 1;
             Nodes_list = scale_send_event(Nodes_list, event); 
         
         % Check to see if there is any event in the buffer to be sent    
@@ -68,11 +68,13 @@ while 1
             if(~isempty(Nodes_list(k).buffer))
                buffered_event = Nodes_list(k).buffer(1); % pick to the oldest event 
 
+               
                disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
                %disp(sprintf('Buffer Event instant %d, currrent clock %d, buffer event source %d', buffered_event.instant, clock, buffered_event.source));
                disp(sprintf('Found 1 event for node #%d, Sent the event to its destination', k));
 
-               disp(buffered_event);   
+               %disp(buffered_event); 
+               forwardedEvents = forwardedEvents + 1;
 
                Nodes_list(k).buffer(1) = []; % remove sent event from buffer
                Nodes_list = scale_send_event(Nodes_list, buffered_event);
@@ -81,6 +83,7 @@ while 1
     end
 end
 
-scale_display_nodes_info(Nodes_list);
+disp(sprintf('Total forwarded events: %d', forwardedEvents));
+%scale_display_nodes_info(Nodes_list);
 scale_power_graph(Nodes_list);
 return;

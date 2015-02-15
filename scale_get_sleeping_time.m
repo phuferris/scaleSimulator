@@ -10,7 +10,7 @@ switch spleeping_protocol
     case 'none'
         next_sleeping_time = 0;
     case 'random'
-        next_sleeping_time = round(rand()*maxRandomSleepingTime); % from 1 to 5 seconds
+        next_sleeping_time = round(rand()*maxRandomSleepingTime) + 1; % from 1 to 5 seconds
     case 'fixed'
         next_sleeping_time = 5; 
     case 'customize'

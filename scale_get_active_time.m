@@ -10,7 +10,7 @@ switch spleeping_protocol
     case 'none'
         next_active_time = 0;
     case 'random'
-        next_active_time = round(rand()*maxRandomActiveTime); % from 1 to 5 seconds
+        next_active_time = round(rand()*maxRandomActiveTime) + 1; % from 2 to 6 seconds
     case 'fixed'
         next_active_time = 5; 
     case 'customize'

@@ -31,12 +31,14 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
         % Forward the event to a nearby neighbor
         else
             if node_AP_connections.through_neighbor ~= 0
+                disp(sprintf('forward event to neighbor node'));
                 Nodes_list = scale_send_to_neighbor(Nodes_list, event, node_AP_connections.through_neighbor);
                 
                 % need to reduce current node power due to sendig activity
                 current_node.power = scale_power_consumption(current_node.power, action);
             
             else
+                %disp(sprintf('buffering the event'));
                 if numel(current_node.buffer) < bufferSize
                     current_node.buffer = [current_node.buffer; event];
                 end
@@ -71,12 +73,14 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
             current_node.power = scale_power_consumption(current_node.power, action_computing);
 
             if(node_AP_connections.through_neighbor ~= 0)
-                disp(sprintf('Found a neighbor that can forward event to an AP'));
+                disp(sprintf('Found a neighbor that can forward event to an AP, neighbor Id %d ', node_AP_connections.through_neighbor));
+                
                 Nodes_list = scale_send_to_neighbor(Nodes_list, event, node_AP_connections.through_neighbor); 
                 
                 current_node.power = scale_power_consumption(current_node.power, action);
                 
             else % no neighbor is active or has connection to an AP, buffering the event
+                %disp(sprintf('buffering event'));
                 if numel(current_node.buffer) < bufferSize
                     current_node.buffer = [current_node.buffer; event];
                 end
