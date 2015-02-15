@@ -3,6 +3,7 @@ function [TotPower]=scale_run_random_sleep(Nodes_list, Events_list, max_run_time
 
 global sentEvents;
 global forwardedEvents;
+global lifeTime;
 
 % Initialize nodes' active and inactive time
 for k=1:numel(Nodes_list)
@@ -13,7 +14,7 @@ end
 clock = 0;
 sentEvents = 0;
 forwardedEvents = 0;
-scale_reset_events_arrived_at_APs();
+scale_get_events_arrived_at_APs();
 
 beacon_broadcast_action = [];
 beacon_broadcast_action.type = 'broadcast_beacon';
@@ -24,6 +25,7 @@ while 1
     % Check to see if the network topology is still active
     network_status = scale_check_topology_connectors(Nodes_list);
     if network_status == 0
+       lifeTime=clock;
        disp(sprintf('At clock %d, all nodes that have access to APs are died', clock));
        break;
     end
