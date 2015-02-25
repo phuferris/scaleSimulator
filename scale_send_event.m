@@ -23,7 +23,7 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
         
         % Current node has direct connection to an access point
         if(node_AP_connections.through_neighbor == current_node.id)
-            disp(sprintf('This node has direct connection to AP #%d, sent event to the AP', node_AP_connections.AP_issid));            
+            %disp(sprintf('This node has direct connection to AP #%d, sent event to the AP', node_AP_connections.AP_issid));            
             scale_send_to_AP(node_AP_connections.AP_issid);
             
             % need to reduce current node power due to sendig activity
@@ -31,7 +31,7 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
         % Forward the event to a nearby neighbor
         else
             if node_AP_connections.through_neighbor ~= 0
-                disp(sprintf('forward event to neighbor node'));
+                %disp(sprintf('forward event to neighbor node'));
                 Nodes_list = scale_send_to_neighbor(Nodes_list, event, node_AP_connections.through_neighbor);
                 
                 % need to reduce current node power due to sendig activity
@@ -47,7 +47,7 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
     else
         % find and update its path to an AP through a neighbor
         if(~isempty(current_node_neighbors))
-            disp(sprintf('This node does not have direct connection. Check neighbors'));
+            %disp(sprintf('This node does not have direct connection. Check neighbors'));
             best_neighbor = current_node_neighbors(1);
             for i=2:numel(current_node_neighbors)
                 if(current_node_neighbors(i).status == 1 && best_neighbor.AP_connection == 1 && current_node_neighbors(i).AP_connection_hop_count < best_neighbor.AP_connection_hop_count)
@@ -73,7 +73,7 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
             current_node.power = scale_power_consumption(current_node.power, action_computing);
 
             if(node_AP_connections.through_neighbor ~= 0)
-                disp(sprintf('Found a neighbor that can forward event to an AP, neighbor Id %d ', node_AP_connections.through_neighbor));
+                %disp(sprintf('Found a neighbor that can forward event to an AP, neighbor Id %d ', node_AP_connections.through_neighbor));
                 
                 Nodes_list = scale_send_to_neighbor(Nodes_list, event, node_AP_connections.through_neighbor); 
                 
