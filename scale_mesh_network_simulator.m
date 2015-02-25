@@ -16,6 +16,7 @@ global APs_list;
 global sentEvents;
 global forwardedEvents;
 global totalReceived;
+global lifeTime;
 
 Nodes_list = [];
 
@@ -101,12 +102,12 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
+
 max_run_time = 500;
 
-%
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
-
+ActLife=lifeTime;
 %}
 scale_get_events_arrived_at_APs();
 sentStatistics.act_sentEvent = sentEvents;
@@ -117,6 +118,7 @@ sentStatistics.act_totalReceived = totalReceived;
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
 RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
+RandLife=lifeTime;
 
 scale_get_events_arrived_at_APs();
 scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0);
@@ -128,6 +130,18 @@ sentStatistics.random_totalReceived = totalReceived;
 disp(sprintf('Sent Statistics'));
 disp(sentStatistics);
 
+CustLife=0;
+sentStatistics.cust_sentEvent = 1;
+sentStatistics.cust_forwardedEvents = 0;
+sentStatistics.cust_totalReceived = 0;
+
+scale_draw_events(sentStatistics);
+scale_percent_compare(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0, sentStatistics);
+
+
+if lifeTime~=0
+    scale_lifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife);
+end
 %}
 
 

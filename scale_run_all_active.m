@@ -3,6 +3,7 @@ function [TotPower]=scale_run_all_active(Nodes_list, Events_list, max_run_time)
 
 global sentEvents;
 global forwardedEvents;
+global lifeTime;
 
 % Set nodes to be active
 for k=1:numel(Nodes_list)
@@ -13,7 +14,7 @@ end
 clock = 0;
 sentEvents = 0;
 forwardedEvents = 0;
-scale_reset_events_arrived_at_APs();
+scale_get_events_arrived_at_APs();
 
 % Loop until clock is reach 
 % the maximum run time thredhold
@@ -23,6 +24,7 @@ while 1
     % Check to see if the network topology is still active
     network_status = scale_check_topology_connectors(Nodes_list);
     if network_status == 0
+        lifeTime=clock;
        disp(sprintf('At clock %d, all nodes that have access to APs are died', clock));
        break;
     end
