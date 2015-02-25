@@ -4,6 +4,8 @@ function [TotPower]=scale_run_random_sleep(Nodes_list, Events_list, max_run_time
 global sentEvents;
 global forwardedEvents;
 global lifeTime;
+global activeTime;
+
 
 % Initialize nodes' active and inactive time
 for k=1:numel(Nodes_list)
@@ -47,6 +49,9 @@ while 1
             action.time = 1;
             Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
         
+            %calculate total active Time
+            activeTime=activeTime+1;
+            
            % Check to see if the node has send beacon message to its
            % neighbors to info their update statas
            if Nodes_list(k).beacon_broadcasted == 0
