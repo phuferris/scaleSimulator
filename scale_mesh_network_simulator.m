@@ -17,8 +17,11 @@ global sentEvents;
 global forwardedEvents;
 global totalReceived;
 global lifeTime;
-global cyclePeriod;
 global activeTime;
+global cyclePeriod;
+global numCycles;
+global DutyTime;
+
 
 
 Nodes_list = [];
@@ -106,9 +109,12 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % Now, it is time to run network topology and generate events to 
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
+cyclePeriod = 100;
+numCycles = 60;
+max_run_time = cyclePeriod*numCycles;
 
-max_run_time = 6000;
-lifeTime=0;
+
+
 %
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
@@ -123,18 +129,26 @@ sentStatistics.act_totalReceived = totalReceived;
 %
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
-lifeTime=0;
-activeTime=0;
-RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
+%RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
+RandPower = scale_run_randSleep_duty(Nodes_list, Events_list, max_run_time);
 RandLife=lifeTime;
 RandDuty=0;
 
 %compute average duty cycle
-if (RandLife~=0 && activeTime~=0)
-RandDuty=floor(activeTime/numNodes/RandLife*100);
-elseif(RandLife==0 && activeTime~=0)
-    RandDuty=floor(activeTime/numNodes/max_run_time*100);
+if (RandLife~=0)
+RandDuty=floor(sum(DutyTime(:))/numNodes/RandLife*100);
+else
+    RandDuty=floor(sum(DutyTime(:))/numNodes/max_run_time*100);
 end
+
+%{
+%compute average duty cycle
+if (RandLife~=0)
+RandDuty=floor(sum(activeTime)/numNodes/RandLife*100);
+else
+    RandDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
+end
+%}
 
 scale_get_events_arrived_at_APs();
 scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0);
