@@ -24,6 +24,7 @@ global maxRandomActiveTime;
 
 global bufferSize;
 global wakeup_power;
+global active_sleep_periods;
 
 %=======================================
 
@@ -52,4 +53,6 @@ maxRandomActiveTime = 5; % 5 second;
 
 bufferSize = 100; % 100 events max
 wakeup_power = 0.3;  % mAh
+
+active_sleep_periods = [5,6,7,8,9,10,11,12,13,14,15;5,6,7,8,9,10,11,12,13,14,15];
 

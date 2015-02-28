@@ -20,7 +20,6 @@ global lifeTime;
 global cyclePeriod;
 global activeTime;
 
-
 Nodes_list = [];
 
 sentStatistics = [];
@@ -110,17 +109,17 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 max_run_time = 500;
 lifeTime=0;
 
+%{
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
 ActLife=lifeTime;
 ActDuty=100;
-%}
+
 scale_get_events_arrived_at_APs();
 sentStatistics.act_sentEvent = sentEvents;
 sentStatistics.act_forwardedEvents = forwardedEvents;
 sentStatistics.act_totalReceived = totalReceived;
 
-%
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
 lifeTime=0;
@@ -128,6 +127,15 @@ activeTime=0;
 RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
 RandLife=lifeTime;
 RandDuty=0;
+%}
+
+% Optimized sleeping schema with Marko chain
+
+CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
+
+
+
+%{
 
 %compute average duty cycle
 if (RandLife~=0 && activeTime~=0)
