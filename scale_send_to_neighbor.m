@@ -9,7 +9,7 @@ function [Nodes_list] = scale_send_to_neighbor(Nodes_list, event, neighbor_id)
         return
     end
     
-    disp(sprintf('neighbor ID %d', neighbor_id));
+    %disp(sprintf('neighbor ID %d', neighbor_id));
     
     if ~isempty(Nodes_list(neighbor_id))
         if Nodes_list(neighbor_id).status == 1

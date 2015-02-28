@@ -23,7 +23,6 @@ global numCycles;
 global DutyTime;
 
 
-
 Nodes_list = [];
 
 sentStatistics = [];
@@ -109,30 +108,38 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % Now, it is time to run network topology and generate events to 
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
+
+
+%{
 cyclePeriod = 100;
 numCycles = 60;
 max_run_time = cyclePeriod*numCycles;
+%}
 
 
 
-%
+max_run_time = 500;
+
+%{
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
 ActLife=lifeTime;
 ActDuty=100;
-%}
+
 scale_get_events_arrived_at_APs();
 sentStatistics.act_sentEvent = sentEvents;
 sentStatistics.act_forwardedEvents = forwardedEvents;
 sentStatistics.act_totalReceived = totalReceived;
 
-%
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
 RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
 %RandPower = scale_run_randSleep_duty(Nodes_list, Events_list, max_run_time);
 RandLife=lifeTime;
 RandDuty=0;
+%}
+
+%{
 
 %{
 %compute average duty cycle
@@ -179,4 +186,6 @@ if (lifeTime~=0)
 end
 %}
 
+% Optimized sleeping schema with Marko chain
 
+CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);

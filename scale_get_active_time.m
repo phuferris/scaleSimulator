@@ -11,8 +11,6 @@ switch spleeping_protocol
         next_active_time = 0;
     case 'random'
         next_active_time = round(rand()*maxRandomActiveTime) + 1; % from 2 to 6 seconds
-    case 'fixed'
-        next_active_time = 5; 
     case 'customize'
         next_active_time = 3; % need to construct Markov chain to calculate next active time
 end
