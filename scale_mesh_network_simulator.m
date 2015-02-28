@@ -129,26 +129,27 @@ sentStatistics.act_totalReceived = totalReceived;
 %
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
-%RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
-RandPower = scale_run_randSleep_duty(Nodes_list, Events_list, max_run_time);
+RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
+%RandPower = scale_run_randSleep_duty(Nodes_list, Events_list, max_run_time);
 RandLife=lifeTime;
 RandDuty=0;
 
+%{
 %compute average duty cycle
 if (RandLife~=0)
 RandDuty=floor(sum(DutyTime(:))/numNodes/RandLife*100);
 else
     RandDuty=floor(sum(DutyTime(:))/numNodes/max_run_time*100);
 end
+%}
 
-%{
 %compute average duty cycle
 if (RandLife~=0)
 RandDuty=floor(sum(activeTime)/numNodes/RandLife*100);
 else
     RandDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
 end
-%}
+
 
 scale_get_events_arrived_at_APs();
 scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0);
