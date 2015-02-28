@@ -104,6 +104,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 
 
 max_run_time = 500;
+lifeTime=0;
 
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
