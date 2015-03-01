@@ -5,6 +5,7 @@ global sentEvents;
 global forwardedEvents;
 global lifeTime;
 
+
 % Set nodes to be active
 for k=1:numel(Nodes_list)
    Nodes_list(k).status = 1; 

@@ -108,6 +108,8 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 
 max_run_time = 500;
 
+% ################ Begin of all active schema #################
+
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
 ActLife=lifeTime;
@@ -120,38 +122,49 @@ sentStatistics.act_totalReceived = totalReceived;
 
 % ################ End of all active schema #################
 
+% ############### Begin of random sleeping schema ##################
+
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
 RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
-RandLife=lifeTime;
-RandDuty=100;
+RandLife = lifeTime;
+RandDuty = 0; 
 
 scale_get_events_arrived_at_APs();
 sentStatistics.random_sentEvent = sentEvents;
 sentStatistics.random_forwardedEvents = forwardedEvents;
 sentStatistics.random_totalReceived = totalReceived;
 
+% Compute average duty cycle for Random sleeping Scheme
+if (RandLife~=0)
+    RandDuty=floor(sum(activeTime)/numNodes/RandLife*100);
+elseif(RandLife==0)
+    RandDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
+end
+
 % ############### End of random sleeping schema ##################
+
+% ################ Begin of optimized schema #################
 
 % Optimized sleeping schema with Marko chain
 CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
+CustLife = lifeTime;
+CustDuty = 0;
 
 scale_get_events_arrived_at_APs();
 
-CustLife=lifeTime;
 sentStatistics.cust_sentEvent = sentEvents;
 sentStatistics.cust_forwardedEvents = forwardedEvents;
 sentStatistics.cust_totalReceived = totalReceived;
-CustDuty=100;
+
+% Compute average duty cycle for Random sleeping Scheme
+if (CustLife ~= 0)
+    CustDuty=floor(sum(activeTime)/numNodes/CustLife*100);
+elseif(CustLife==0)
+    CustDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
+end
 
 % ################ End of optimized schema #################
-
-%compute average duty cycle
-if (RandLife~=0 && activeTime~=0)
-RandDuty=floor(activeTime/numNodes/RandLife*100);
-elseif(RandLife==0 && activeTime~=0)
-    RandDuty=floor(activeTime/numNodes/max_run_time*100);
-end
 
 % Drawing power consumption graph
 scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower);
@@ -169,6 +182,5 @@ if (lifeTime~=0)
     scale_lifeThroughput_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife,sentStatistics);
     scale_dutyLifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife, ActDuty, RandDuty, CustDuty);
 end
-%}
 
 

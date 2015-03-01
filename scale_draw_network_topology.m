@@ -10,7 +10,7 @@ box on;
 
 for k=1:numel(Nodes_list)
     % plot wireless sensor nodes  
-    plot(Nodes_list(k).x_coordinate,Nodes_list(k).y_coordinate,'k.', 'MarkerSize', 15);
+    h1=plot(Nodes_list(k).x_coordinate,Nodes_list(k).y_coordinate,'k.', 'MarkerSize', 15);
     text(Nodes_list(k).x_coordinate+5, Nodes_list(k).y_coordinate+0.1, num2str(k),'Color','r');
     %connect neighbors
 if (~isempty(Nodes_list(k).neighbors))
@@ -22,7 +22,7 @@ end
 
 for k=1:numel(APs_list)
 % plot wireless access points
-plot(APs_list(k).x_coordinate,APs_list(k).y_coordinate, 'b.', 'MarkerSize', 20);
+h2=plot(APs_list(k).x_coordinate,APs_list(k).y_coordinate, 'b.', 'MarkerSize', 20);
 text(APs_list(k).x_coordinate+5, APs_list(k).y_coordinate+0.1, num2str(k),'Color','g');
 %connect access points to nodes
 plot([APs_list(k).x_coordinate, Nodes_list(APs_list(k).connect_node_id).x_coordinate], [APs_list(k).y_coordinate, Nodes_list(APs_list(k).connect_node_id).y_coordinate], 'b-');
@@ -38,6 +38,7 @@ ylabel('Y Coordinate');
 axis([0, maxx, 0, maxy]);
 set(gca, 'XTick', [0; maxx]);
 set(gca, 'YTick', [maxy]);
+legend([h1 h2],{'Sensor Node','Access Point'});
 
 
 end

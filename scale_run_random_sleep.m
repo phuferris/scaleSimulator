@@ -5,6 +5,7 @@ global sentEvents;
 global forwardedEvents;
 global lifeTime;
 global activeTime;
+global numNodes;
 
 
 % Initialize nodes' active and inactive time
@@ -17,6 +18,8 @@ clock = 0;
 sentEvents = 0;
 forwardedEvents = 0;
 scale_reset_events_arrived_at_APs();
+lifeTime=0;
+activeTime=zeros(numNodes,1);
 
 beacon_broadcast_action = [];
 beacon_broadcast_action.type = 'broadcast_beacon';
@@ -50,7 +53,7 @@ while 1
             Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
         
             %calculate total active Time
-            activeTime=activeTime+1;
+            activeTime(k)=activeTime(k)+1;
             
            % Check to see if the node has send beacon message to its
            % neighbors to info their update statas

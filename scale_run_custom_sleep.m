@@ -6,6 +6,10 @@ global forwardedEvents;
 global lifeTime;
 global activeTime;
 global active_sleep_periods;
+global numNodes;
+
+lifeTime=0;
+activeTime=zeros(numNodes,1);
 
 prob_sleeping = 0.6;
 prob_active = 1-prob_sleeping;
@@ -69,7 +73,7 @@ while 1
             %calculate total active Time
             % don't know what this is ued for.
             % the data may not be correct
-            activeTime=activeTime+1;
+            activeTime(k)=activeTime(k)+1;
             
             
            % Check to see if the node has send beacon message to its
