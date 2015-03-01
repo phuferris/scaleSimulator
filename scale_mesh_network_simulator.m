@@ -20,6 +20,7 @@ global lifeTime;
 global cyclePeriod;
 global activeTime;
 
+
 Nodes_list = [];
 
 sentStatistics = [];
