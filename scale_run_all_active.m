@@ -14,7 +14,7 @@ end
 clock = 0;
 sentEvents = 0;
 forwardedEvents = 0;
-scale_get_events_arrived_at_APs();
+scale_reset_events_arrived_at_APs();
 
 % Loop until clock is reach 
 % the maximum run time thredhold

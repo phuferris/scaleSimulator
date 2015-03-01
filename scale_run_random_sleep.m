@@ -16,7 +16,7 @@ end
 clock = 0;
 sentEvents = 0;
 forwardedEvents = 0;
-scale_get_events_arrived_at_APs();
+scale_reset_events_arrived_at_APs();
 
 beacon_broadcast_action = [];
 beacon_broadcast_action.type = 'broadcast_beacon';

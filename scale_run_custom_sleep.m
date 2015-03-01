@@ -7,11 +7,26 @@ global lifeTime;
 global activeTime;
 global active_sleep_periods;
 
+prob_sleeping = 0.6;
+prob_active = 1-prob_sleeping;
+
 
 % Initialize nodes' active and inactive time
 for k=1:numel(Nodes_list)
-    Nodes_list(k).active_time_left = scale_get_active_time(Nodes_list, 'random');
-    Nodes_list(k).sleeping_time_left = scale_get_sleeping_time(Nodes_list, 'random');
+    
+     trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
+     [state, seq] = scale_marko_chain_state_transition(trans);
+     time = active_sleep_periods(state, seq);
+     
+     if state == 1
+         Nodes_list(k).status = 1;
+         Nodes_list(k).active_time_left = time;
+         Nodes_list(k).sleeping_time_left = 0;
+     else
+         Nodes_list(k).status = 0;
+         Nodes_list(k).active_time_left = 0;
+         Nodes_list(k).sleeping_time_left = time;
+     end
 end
 
 clock = 0;
@@ -44,6 +59,7 @@ while 1
         
         % Node is active
         if Nodes_list(k).status == 1 && Nodes_list(k).active_time_left > 0
+            %disp(sprintf('Node id# %d, active ...  time left %d', k, Nodes_list(k).active_time_left));
             
             action = [];
             action.type = 'active';
@@ -120,17 +136,22 @@ while 1
                
            else
                
-               trans = [0.3 0.7; 0.7 03];
+               trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
                
-               [seq, state] = scale_marko_chain_state_transition(trans);
+               [state, seq] = scale_marko_chain_state_transition(trans);
                
-               time = active_sleep_periods(seq, state);
+               time = active_sleep_periods(state, seq);
                
-               disp(sprintf('Node ID# %d, state: %d, time in state: %d, seq# %d', k, state, time, seq)); 
+               %disp(sprintf('Node ID# %d, state: %d, time in state: %d, seq# %d', k, state, time, seq)); 
                
-               Nodes_list(k).status = 0;
-               Nodes_list(k).active_time_left = scale_get_active_time(Nodes_list, 'random');
-               Nodes_list(k).sleeping_time_left = scale_get_sleeping_time(Nodes_list, 'random');
+               % Node continues to be in active state
+               if state == 1
+                  Nodes_list(k).active_time_left = time; 
+               else
+                   Nodes_list(k).status = 0;
+                   Nodes_list(k).active_time_left = 0;
+                   Nodes_list(k).sleeping_time_left = time;
+               end
                
                action = [];
                action.type = 'computing';
@@ -144,6 +165,7 @@ while 1
            end
            
         else % Node is sleeping
+            %disp(sprintf('Node id# %d, sleeping ... ', k));
             action = [];
             action.type = 'sleeping';
             action.time = 1;
@@ -152,8 +174,32 @@ while 1
             if Nodes_list(k).sleeping_time_left > 1
                 Nodes_list(k).sleeping_time_left = Nodes_list(k).sleeping_time_left -1;
             else
-                Nodes_list(k).status = 1;
-                Nodes_list(k).sleeping_time_left = 0;
+               % Node is waking up, switching from sleeping status to
+               % active, so it consumes more energy that other cycles
+               action = [];
+               action.type = 'wakeup';
+               Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+               
+               Nodes_list = scale_send_beacon_message(Nodes_list, k);
+               Nodes_list(k).beacon_broadcasted = 1;
+               Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, beacon_broadcast_action);
+               
+               trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
+               [state, seq] = scale_marko_chain_state_transition(trans);
+               
+               time = active_sleep_periods(state, seq);
+               
+               %disp(sprintf('Waking up, Node ID# %d, state: %d, time in state: %d, seq# %d', k, state, time, seq)); 
+               
+               % Node is waking up, changing from
+               % sleeping state to active stage
+               if(state == 1)
+                   Nodes_list(k).status = 1;
+                   Nodes_list(k).sleeping_time_left = 0;
+                   Nodes_list(k).active_time_left = time;
+               else
+                   Nodes_list(k).sleeping_time_left = time;
+               end
             end
         end
     end
@@ -162,6 +208,6 @@ end
 %scale_display_nodes_info(Nodes_list);
 
 disp(sprintf('Total forwarded events: %d', forwardedEvents));
-TotPower=scale_power_graph(Nodes_list, 'Random Sleep');
+TotPower=scale_power_graph(Nodes_list, 'Optimized Sleep Schema');
 
 return;

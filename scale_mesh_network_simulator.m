@@ -107,9 +107,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % 1 second of sensors' clock.
 
 max_run_time = 500;
-lifeTime=0;
 
-%{
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
 ActLife=lifeTime;
@@ -120,22 +118,33 @@ sentStatistics.act_sentEvent = sentEvents;
 sentStatistics.act_forwardedEvents = forwardedEvents;
 sentStatistics.act_totalReceived = totalReceived;
 
+% ################ End of all active schema #################
+
 % First sleeping schema: every node stay active/sleeping 
 % in random interval fron 1 to 5 mins
-lifeTime=0;
-activeTime=0;
 RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
 RandLife=lifeTime;
-RandDuty=0;
-%}
+RandDuty=100;
+
+scale_get_events_arrived_at_APs();
+sentStatistics.random_sentEvent = sentEvents;
+sentStatistics.random_forwardedEvents = forwardedEvents;
+sentStatistics.random_totalReceived = totalReceived;
+
+% ############### End of random sleeping schema ##################
 
 % Optimized sleeping schema with Marko chain
-
 CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
 
+scale_get_events_arrived_at_APs();
 
+CustLife=lifeTime;
+sentStatistics.cust_sentEvent = sentEvents;
+sentStatistics.cust_forwardedEvents = forwardedEvents;
+sentStatistics.cust_totalReceived = totalReceived;
+CustDuty=100;
 
-%{
+% ################ End of optimized schema #################
 
 %compute average duty cycle
 if (RandLife~=0 && activeTime~=0)
@@ -144,25 +153,15 @@ elseif(RandLife==0 && activeTime~=0)
     RandDuty=floor(activeTime/numNodes/max_run_time*100);
 end
 
-scale_get_events_arrived_at_APs();
-scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0);
-
-sentStatistics.random_sentEvent = sentEvents;
-sentStatistics.random_forwardedEvents = forwardedEvents;
-sentStatistics.random_totalReceived = totalReceived;
+% Drawing power consumption graph
+scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower);
 
 disp(sprintf('Sent Statistics'));
 disp(sentStatistics);
 
-CustLife=0;
-sentStatistics.cust_sentEvent = 1;
-sentStatistics.cust_forwardedEvents = 0;
-sentStatistics.cust_totalReceived = 0;
-CustDuty=0;
-
 
 scale_draw_events(sentStatistics);
-scale_percent_compare(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, 0, sentStatistics);
+scale_percent_compare(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower, sentStatistics);
 
 
 if (lifeTime~=0)
