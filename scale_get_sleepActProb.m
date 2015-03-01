@@ -2,7 +2,7 @@ function [Psleep, Pactive]=scale_get_sleepActProb(currentPs, Node)
 global powerWeight;
 global neighborWeight;
 global distanceWeight;
- 
+
 %number of neighbors
 m=numel(Node.neighbors);
 

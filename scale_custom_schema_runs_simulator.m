@@ -15,16 +15,13 @@ global APs_list;
 global sentEvents;
 global forwardedEvents;
 global totalReceived;
-global lifeTime;
-global activeTime;
 
 global powerWeight;
 global neighborWeight;
 global distanceWeight;
 
-powerWeight = 0.02;
-neighborWeight = 0.06;
-distanceWeight = 0.05;
+
+
 
 Nodes_list = [];
 
@@ -112,86 +109,70 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 3000;
+max_run_time = 1000;
 
-% ################### Begin of all active schema ####################
 
-% First sleeping schema: every node stay awake
-ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
-ActLife = lifeTime;
-ActDuty = 100;
-
-scale_get_events_arrived_at_APs();
-sentStatistics.act_sentEvent = sentEvents;
-sentStatistics.act_forwardedEvents = forwardedEvents;
-sentStatistics.act_totalReceived = totalReceived;
-
-if (ActLife==0)
- ActLife= max_run_time;
-end
-% ################### End of all active schema #####################
-
-% ############### Begin of random sleeping schema ##################
-
-% First sleeping schema: every node stay active/sleeping 
-% in random interval from 5 to 15 seconds
-RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
-RandLife = lifeTime;
-RandDuty = 0; 
-
-scale_get_events_arrived_at_APs();
-sentStatistics.random_sentEvent = sentEvents;
-sentStatistics.random_forwardedEvents = forwardedEvents;
-sentStatistics.random_totalReceived = totalReceived;
-
-% Compute average duty cycle for Random sleeping Scheme
-if (RandLife~=0)
-    RandDuty=floor(sum(activeTime)/numNodes/RandLife*100);
-elseif(RandLife==0)
-    RandDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
-    RandLife=max_run_time;
-end
-
-% ################# End of random sleeping schema ##################
+% Run 1 ...
 
 % ################### Begin of optimized schema ####################
 
 % Optimized sleeping schema with Marko Chain
-CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
-CustLife = lifeTime;
-CustDuty = 0;
+powerWeight = 0.02;
+neighborWeight = 0.06;
+distanceWeight = 0.05;
+run1_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
 
 scale_get_events_arrived_at_APs();
 
-sentStatistics.cust_sentEvent = sentEvents;
-sentStatistics.cust_forwardedEvents = forwardedEvents;
-sentStatistics.cust_totalReceived = totalReceived;
-
-% Compute average duty cycle for Random sleeping Scheme
-if (CustLife ~= 0)
-    CustDuty=floor(sum(activeTime)/numNodes/CustLife*100);
-elseif(CustLife==0)
-    CustDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
-    CustLife=max_run_time;
-end
+sentStatistics.run1_sentEvent = sentEvents;
+sentStatistics.run1_forwardedEvents = forwardedEvents;
+sentStatistics.run1_totalReceived = totalReceived;
+sentStatistics.run1_power = round(run1_Power);
 
 % ################### End of optimized schema ####################
 
-% Drawing power consumption graph
-scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower);
+
+% Run 2 ... 
+powerWeight = 0.04;
+neighborWeight =0.06;
+distanceWeight = 0.05;
+
+% ################### Begin of optimized schema ####################
+
+% Optimized sleeping schema with Marko Chain
+run2_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
+scale_get_events_arrived_at_APs();
+
+sentStatistics.run2_sentEvent = sentEvents;
+sentStatistics.run2_forwardedEvents = forwardedEvents;
+sentStatistics.run2_totalReceived = totalReceived;
+sentStatistics.run2_power = round(run2_Power);
+
+% ################### End of optimized schema ####################
 
 disp(sprintf('Sent Statistics'));
 disp(sentStatistics);
 
+% Run 3 ... 
+powerWeight = 0.06;
+neighborWeight = 0.06;
+distanceWeight = 0.05;
 
-scale_draw_events(sentStatistics);
-scale_percent_compare(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower, sentStatistics);
+% ################### Begin of optimized schema ####################
 
+% Optimized sleeping schema with Marko Chain
+run3_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
+scale_get_events_arrived_at_APs();
 
-if (lifeTime~=0)
-    scale_lifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife);
-    scale_lifeThroughput_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife,sentStatistics);
-    scale_dutyLifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife, ActDuty, RandDuty, CustDuty);
-end
+sentStatistics.run3_sentEvent = sentEvents;
+sentStatistics.run3_forwardedEvents = forwardedEvents;
+sentStatistics.run3_totalReceived = totalReceived;
+sentStatistics.run3_power = round(run3_Power);
+
+% ################### End of optimized schema ####################
+
+disp(sprintf('Sent Statistics'));
+disp(sentStatistics);
+
 
 
