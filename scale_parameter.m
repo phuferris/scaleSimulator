@@ -52,8 +52,8 @@ maxy = 250; % feet
 maxEvents = 5000;
 eventsPeriod = 3600; % 3600 second or 1 hour
 
-maxRandomSleepingTime = 5; % 5 second;
-maxRandomActiveTime = 5; % 5 second;
+maxRandomSleepingTime = 10; % 5 second;
+maxRandomActiveTime = 10; % 5 second;
 
 bufferSize = 100; % 100 events max
 wakeup_power = 0.3;  % mAh
@@ -61,6 +61,6 @@ wakeup_power = 0.3;  % mAh
 active_sleep_periods = [5,6,7,8,9,10,11,12,13,14,15;5,6,7,8,9,10,11,12,13,14,15];
 
 %constants to calculate next sleep probability
-powerWeight= 0.05;
+powerWeight= 0.02;
 neighborWeight=0.06;
 distanceWeight=0.05;

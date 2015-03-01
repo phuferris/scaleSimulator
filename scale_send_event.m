@@ -50,11 +50,13 @@ function [Nodes_list] = scale_send_event(Nodes_list, event)
             %disp(sprintf('This node does not have direct connection. Check neighbors'));
             best_neighbor = current_node_neighbors(1);
             for i=2:numel(current_node_neighbors)
-                if(current_node_neighbors(i).status == 1 && best_neighbor.AP_connection == 1 && current_node_neighbors(i).AP_connection_hop_count < best_neighbor.AP_connection_hop_count)
-                    best_neighbor = current_node_neighbors(i);
+                if(current_node_neighbors(i).status == 1 && current_node_neighbors(i).AP_connection == 1)
+                    if(current_node_neighbors(i).AP_connection_hop_count < best_neighbor.AP_connection_hop_count)
+                        best_neighbor = current_node_neighbors(i);
+                    end
                 end
             end
-            
+          
             node_AP_connections = [];
             if(best_neighbor.status == 1 && best_neighbor.AP_connection == 1 )
                 node_AP_connections.through_neighbor = best_neighbor.AP_connection_through_node_id;

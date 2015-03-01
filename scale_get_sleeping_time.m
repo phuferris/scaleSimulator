@@ -10,9 +10,7 @@ switch spleeping_protocol
     case 'none'
         next_sleeping_time = 0;
     case 'random'
-        next_sleeping_time = round(rand()*maxRandomSleepingTime) + 1; % from 1 to 5 seconds
-    case 'fixed'
-        next_sleeping_time = 5; 
+        next_sleeping_time = round(rand()*maxRandomSleepingTime) + 4; % from 5 to 15 seconds
     case 'customize'
         next_sleeping_time = 3 ; % need to construct a Markov chain for this
 end

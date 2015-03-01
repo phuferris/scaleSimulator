@@ -107,14 +107,14 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 5000;
+max_run_time = 2000;
 
 % ################ Begin of all active schema #################
 
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
-ActLife=lifeTime;
-ActDuty=100;
+ActLife = lifeTime;
+ActDuty = 100;
 
 scale_get_events_arrived_at_APs();
 sentStatistics.act_sentEvent = sentEvents;

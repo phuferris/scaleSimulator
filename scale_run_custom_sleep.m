@@ -11,7 +11,7 @@ global numNodes;
 lifeTime=0;
 activeTime=zeros(numNodes,1);
 
-prob_sleeping = 0.6;
+prob_sleeping = 0.7;
 prob_active = 1-prob_sleeping;
 
 
