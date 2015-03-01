@@ -10,11 +10,14 @@ clr=['m','g','y'];
         if(n==1)
             hold on;
         end
-          plot(Duty(n),Life(n),['.',clr(n)],'MarkerSize',40);    
+          plot(Duty(n),Life(n),['.',clr(n)],'MarkerSize',30);    
     end
  % set(gca,'XTick',[1 2 3]);  
- hold off;
+
 legend(protocol1,protocol2,protocol3);
+
+plot(Duty,Life,'r--');
+hold off;
 
 title('SCALE Lifetime vs Duty Cycle');
     
