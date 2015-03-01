@@ -1,4 +1,4 @@
-function [TotPower]=scale_run_custom_sleep(Nodes_list, Events_list, max_run_time)
+function [TotPower]=scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping)
 % Simulate SCALE network when all nodes are kept active
 
 global sentEvents;
@@ -11,7 +11,7 @@ global numNodes;
 lifeTime=0;
 activeTime=zeros(numNodes,1);
 
-prob_sleeping = 0.6;
+%prob_sleeping = 0.6;
 prob_active = 1-prob_sleeping;
 
 

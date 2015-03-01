@@ -22,9 +22,12 @@ global powerWeight;
 global neighborWeight;
 global distanceWeight;
 
+
 powerWeight = 0.02;
 neighborWeight = 0.06;
 distanceWeight = 0.05;
+
+prob_sleeping = 0.6;
 
 Nodes_list = [];
 
@@ -112,7 +115,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 3000;
+max_run_time = 300;
 
 % ################### Begin of all active schema ####################
 
@@ -157,7 +160,7 @@ end
 % ################### Begin of optimized schema ####################
 
 % Optimized sleeping schema with Marko Chain
-CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
+CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping);
 CustLife = lifeTime;
 CustDuty = 0;
 
