@@ -107,7 +107,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 2000;
+max_run_time = 30000;
 
 % ################ Begin of all active schema #################
 
@@ -121,6 +121,9 @@ sentStatistics.act_sentEvent = sentEvents;
 sentStatistics.act_forwardedEvents = forwardedEvents;
 sentStatistics.act_totalReceived = totalReceived;
 
+if (ActLife==0)
+ ActLife= max_run_time;
+end
 % ################ End of all active schema #################
 
 % ############### Begin of random sleeping schema ##################
@@ -141,6 +144,7 @@ if (RandLife~=0)
     RandDuty=floor(sum(activeTime)/numNodes/RandLife*100);
 elseif(RandLife==0)
     RandDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
+    RandTime=max_run_time;
 end
 
 % ############### End of random sleeping schema ##################
@@ -163,6 +167,7 @@ if (CustLife ~= 0)
     CustDuty=floor(sum(activeTime)/numNodes/CustLife*100);
 elseif(CustLife==0)
     CustDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
+    CustTime=max_run_time;
 end
 
 % ################ End of optimized schema #################
@@ -178,10 +183,10 @@ scale_draw_events(sentStatistics);
 scale_percent_compare(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower, sentStatistics);
 
 
-if (lifeTime~=0)
+
     scale_lifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife);
     scale_lifeThroughput_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife,sentStatistics);
     scale_dutyLifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife, ActDuty, RandDuty, CustDuty);
-end
+
 
 

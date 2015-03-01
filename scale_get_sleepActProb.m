@@ -20,7 +20,7 @@ else
             end
         end
 
-        hop = best_neighbor.AP_connection_hop_count + 1;
+        hop = best_neighbor.AP_connection_hop_count;
     else
         hop = 1000; 
         % When node does not have connection 
