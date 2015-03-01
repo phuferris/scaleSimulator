@@ -9,8 +9,8 @@ m=numel(Node.neighbors);
 %number of hops to AP
 if (~isempty(Node.AP_Connections) && Node.AP_Connections.through_neighbor > 0)
     hop = Node.AP_Connections.num_hops;
-else    
-    if m > 0
+else
+    if(m > 0)
         best_neighbor = Node.neighbors(1);
         for i=2:numel(Node.neighbors)
             if(Node.neighbors(i).status == 1 && Node.neighbors(i).AP_connection == 1) 
@@ -19,7 +19,6 @@ else
                 end
             end
         end
-
         hop = best_neighbor.AP_connection_hop_count;
     else
         hop = 1000; 
@@ -28,7 +27,12 @@ else
     end
 end
 
-Psleep = currentPs - powerWeight*sqrt(log(Node.power)) + neighborWeight*m/(m+7) + distanceWeight*sqrt(1/hop);
+%hop cannot be 0, but there are many zero AP_connection_hop_count in list
+if (hop==0)
+Psleep = currentPs - powerWeight*sqrt(log(Node.power)) + neighborWeight*m/(m+7);
+else
+Psleep = currentPs - powerWeight*sqrt(log(Node.power)) + neighborWeight*m/(m+7) + distanceWeight*sqrt(1/hop);    
+end
 
 %{
 a = powerWeight*sqrt(log(Node.power));

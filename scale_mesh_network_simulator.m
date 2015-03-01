@@ -107,7 +107,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 30000;
+max_run_time = 5000;
 
 % ################ Begin of all active schema #################
 
@@ -144,7 +144,7 @@ if (RandLife~=0)
     RandDuty=floor(sum(activeTime)/numNodes/RandLife*100);
 elseif(RandLife==0)
     RandDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
-    RandTime=max_run_time;
+    RandLife=max_run_time;
 end
 
 % ############### End of random sleeping schema ##################
@@ -167,7 +167,7 @@ if (CustLife ~= 0)
     CustDuty=floor(sum(activeTime)/numNodes/CustLife*100);
 elseif(CustLife==0)
     CustDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
-    CustTime=max_run_time;
+    CustLife=max_run_time;
 end
 
 % ################ End of optimized schema #################
