@@ -52,8 +52,8 @@ maxy = 250; % feet
 maxEvents = 5000;
 eventsPeriod = 3600; % 3600 second or 1 hour
 
-maxRandomSleepingTime = 10; % 5 second;
-maxRandomActiveTime = 10; % 5 second;
+maxRandomSleepingTime = 10; % 10 second;
+maxRandomActiveTime = 10; % 10 second;
 
 bufferSize = 100; % 100 events max
 wakeup_power = 0.3;  % mAh

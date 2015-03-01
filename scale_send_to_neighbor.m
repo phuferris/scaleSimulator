@@ -9,7 +9,7 @@ function [Nodes_list] = scale_send_to_neighbor(Nodes_list, event, neighbor_id)
         return
     end
     
-    %disp(sprintf('neighbor ID %d', neighbor_id));
+    %disp(sprintf('EVENT with message id# %d FORWARDED TO Neighbor ID %d', neighbor_id, event.id));
     
     if ~isempty(Nodes_list(neighbor_id))
         if Nodes_list(neighbor_id).status == 1
@@ -20,9 +20,12 @@ function [Nodes_list] = scale_send_to_neighbor(Nodes_list, event, neighbor_id)
            action.type = 'receiving';
            action.packet_size = event.size;
            Nodes_list(neighbor_id).power = scale_power_consumption(Nodes_list(neighbor_id).power, action);
-           
+
+           disp(sprintf('NEIGHBOR Node ID# %d sending forwarded event with message id# %d', neighbor_id, event.id));
+
            Nodes_list = scale_send_event(Nodes_list, event); 
         else
+           disp(sprintf('NEIGHBOR Node ID# %d BUFFERING forwarded event with message id# %d', neighbor_id, event.id));
            Nodes_list(neighbor_id).buffer = [Nodes_list(neighbor_id).buffer, event];
         end
     end

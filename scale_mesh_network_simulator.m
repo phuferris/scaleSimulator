@@ -107,14 +107,14 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 2000;
+max_run_time = 500;
 
 % ################ Begin of all active schema #################
 
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
 ActLife = lifeTime;
-ActDuty = 100;
+ActDuty = 1000;
 
 scale_get_events_arrived_at_APs();
 sentStatistics.act_sentEvent = sentEvents;
@@ -126,7 +126,7 @@ sentStatistics.act_totalReceived = totalReceived;
 % ############### Begin of random sleeping schema ##################
 
 % First sleeping schema: every node stay active/sleeping 
-% in random interval fron 1 to 5 mins
+% in random interval from 5 to 15 seconds
 RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
 RandLife = lifeTime;
 RandDuty = 0; 
@@ -147,7 +147,7 @@ end
 
 % ################ Begin of optimized schema #################
 
-% Optimized sleeping schema with Marko chain
+% Optimized sleeping schema with Marko Chain
 CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
 CustLife = lifeTime;
 CustDuty = 0;

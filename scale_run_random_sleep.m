@@ -38,9 +38,7 @@ while 1
     if (clock > max_run_time)
         break;
     end
-    
-    
-    
+
     events = [];
     events = scale_get_events(Events_list, events, clock);
     
@@ -81,13 +79,12 @@ while 1
         
            % Check to see if it has any any event from the event queue
            if(~isempty(event) && event.instant == clock && event.source == k)
-               %disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
-               %disp(sprintf('Event instant %d, currrent clock %d, event source %d', event.instant, clock, event.source));
+               disp(sprintf('Node ID %d status %d', k, Nodes_list(k).status));
+               disp(sprintf('Event instant %d, currrent clock %d, event source %d', event.instant, clock, event.source));
                %disp(sprintf('Found 1 event for node #%d, Sent the event to its destination', k));
                %disp(event);  
                
-               % Node has event of its own, start to send 
-               % or forward it. 
+               % Node has event of its own, start to send
                sentEvents = sentEvents + 1;
                Nodes_list = scale_send_event(Nodes_list, event); 
 
@@ -95,14 +92,12 @@ while 1
                if(~isempty(Nodes_list(k).buffer))
                    buffered_event = Nodes_list(k).buffer(1); % pick to the oldest event 
                    
-                   %disp(sprintf('BUFFER Node ID %d status %d', k, Nodes_list(k).status));
-                   %disp(sprintf('Buffer Event instant %d, currrent clock %d, buffer event source %d', buffered_event.instant, clock, buffered_event.source));
+                   disp(sprintf('BUFFER Node ID %d status %d', k, Nodes_list(k).status));
+                   disp(sprintf('Buffer Event instant %d, currrent clock %d, buffer event source %d', buffered_event.instant, clock, buffered_event.source));
                    %disp(sprintf('BUFFER Found 1 event for node #%d, Sent the event to its destination', k));
-                   
                    %disp(buffered_event);   
 
                    Nodes_list(k).buffer(1) = []; % remove sent event from buffer
-                   forwardedEvents = forwardedEvents + 1;
                    Nodes_list = scale_send_event(Nodes_list, buffered_event);
                end
            end    
@@ -151,7 +146,7 @@ end
 
 %scale_display_nodes_info(Nodes_list);
 
-disp(sprintf('Total forwarded events: %d', forwardedEvents));
+%disp(sprintf('Total Random Run Forwarded Events: %d', forwardedEvents));
 TotPower=scale_power_graph(Nodes_list, 'Random Sleep');
 
 return;
