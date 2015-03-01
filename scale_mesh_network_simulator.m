@@ -11,13 +11,11 @@ global maxx;
 global maxy;
 global maxEvents;
 global eventsPeriod;
-global maxRandomActiveTime;
 global APs_list;
 global sentEvents;
 global forwardedEvents;
 global totalReceived;
 global lifeTime;
-global cyclePeriod;
 global activeTime;
 
 
@@ -54,7 +52,7 @@ for k=1:numNodes
     
     AP_Connections = [];
     random_AP = mod(round(rand(1)*100), k);
-    if(random_AP == 0 || random_AP == 1 || random_AP == 1)
+    if(random_AP == 0 || random_AP == 1 || random_AP == 2)
         issid = issid + 1;
         
          % Add new Access Point into APs_list
@@ -107,9 +105,9 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 1000;
+max_run_time = 600;
 
-% ################ Begin of all active schema #################
+% ################### Begin of all active schema ####################
 
 % First sleeping schema: every node stay awake
 ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
@@ -124,7 +122,7 @@ sentStatistics.act_totalReceived = totalReceived;
 if (ActLife==0)
  ActLife= max_run_time;
 end
-% ################ End of all active schema #################
+% ################### End of all active schema #####################
 
 % ############### Begin of random sleeping schema ##################
 
@@ -147,9 +145,9 @@ elseif(RandLife==0)
     RandLife=max_run_time;
 end
 
-% ############### End of random sleeping schema ##################
+% ################# End of random sleeping schema ##################
 
-% ################ Begin of optimized schema #################
+% ################### Begin of optimized schema ####################
 
 % Optimized sleeping schema with Marko Chain
 CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time);
@@ -170,7 +168,7 @@ elseif(CustLife==0)
     CustLife=max_run_time;
 end
 
-% ################ End of optimized schema #################
+% ################### End of optimized schema ####################
 
 % Drawing power consumption graph
 scale_total_power_graph(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower);

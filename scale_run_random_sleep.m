@@ -101,31 +101,48 @@ while 1
                    Nodes_list = scale_send_event(Nodes_list, buffered_event);
                end
            end    
-            
-           Nodes_list = scale_send_beacon_message(Nodes_list, k);
-            
-           action = [];
-           action.type = 'broadcast_beacon';
-           Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
-               
-           % Calculate next sleeping and active time
-           if Nodes_list(k).active_time_left > 1
-               Nodes_list(k).active_time_left = Nodes_list(k).active_time_left - 1;
-               
-           else
-               Nodes_list(k).status = 0;
-               Nodes_list(k).active_time_left = scale_get_active_time(Nodes_list, 'random');
-               Nodes_list(k).sleeping_time_left = scale_get_sleeping_time(Nodes_list, 'random');
-               
-               action = [];
-               action.type = 'computing';
-               Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
-               
-               % Node ends another beacon message to its neighbors 
-               % before going back to sleep
+           
+           % Check to see if any neighbor of the node is active. Node can
+           % go back to sleep if at least one of its neighbors can forward
+           % packets to the access point
+           current_active_neighbors = scale_check_active_neighbors(Nodes_list(k).neighbors);
+           
+           disp(sprintf('CURRENT NEIGHBORS %d', current_active_neighbors));
+           
+           if(current_active_neighbors == 0)
                Nodes_list = scale_send_beacon_message(Nodes_list, k);
-               Nodes_list(k).beacon_broadcasted = 0; %reset broadcast beacon tag
-               Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, beacon_broadcast_action);
+
+               action = [];
+               action.type = 'broadcast_beacon';
+               Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+
+               % Calculate next sleeping and active time
+               if Nodes_list(k).active_time_left > 1
+                   Nodes_list(k).active_time_left = Nodes_list(k).active_time_left - 1;
+
+               else
+                   Nodes_list(k).status = 0;
+                   Nodes_list(k).active_time_left = scale_get_active_time(Nodes_list, 'random');
+                   Nodes_list(k).sleeping_time_left = scale_get_sleeping_time(Nodes_list, 'random');
+
+                   action = [];
+                   action.type = 'computing';
+                   Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+
+                   % Node ends another beacon message to its neighbors 
+                   % before going back to sleep
+                   Nodes_list = scale_send_beacon_message(Nodes_list, k);
+                   Nodes_list(k).beacon_broadcasted = 0; %reset broadcast beacon tag
+                   Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, beacon_broadcast_action);
+               end
+           else % The node can go back to sleep
+                Nodes_list(k).status = 0;
+                Nodes_list(k).active_time_left = scale_get_active_time(Nodes_list, 'random');
+                Nodes_list(k).sleeping_time_left = scale_get_sleeping_time(Nodes_list, 'random');
+                
+                action = [];
+                action.type = 'computing';
+                Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
            end
            
         else % Node is sleeping

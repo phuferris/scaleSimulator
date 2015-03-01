@@ -75,10 +75,16 @@ while 1
             % the data may not be correct
             activeTime(k)=activeTime(k)+1;
             
+            % Check to see if any neighbor of the node is active. Node can
+           % go back to sleep if at least one of its neighbors can forward
+           % packets to the access point
+           current_active_neighbors = scale_check_active_neighbors(Nodes_list(k).neighbors);
+           
+           disp(sprintf('CUSTOM CURRENT NEIGHBORS %d', current_active_neighbors));
             
            % Check to see if the node has send beacon message to its
            % neighbors to info their update statas
-           if Nodes_list(k).beacon_broadcasted == 0
+           if (Nodes_list(k).beacon_broadcasted == 0 && current_active_neighbors ==0)
                
                % Node is waking up, switching from sleeping status to
                % active, so it consumes more energy that other cycles
@@ -125,47 +131,58 @@ while 1
                    Nodes_list = scale_send_event(Nodes_list, buffered_event);
                end
            end    
-            
-           Nodes_list = scale_send_beacon_message(Nodes_list, k);
-            
-           action = [];
-           action.type = 'broadcast_beacon';
-           Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
-               
-           % Calculate next sleeping and active time
-           if Nodes_list(k).active_time_left > 1
-               Nodes_list(k).active_time_left = Nodes_list(k).active_time_left - 1;
-               
-           else
-               % Adjust new active/sleeping probability for the node based on its current conditions 
-               [prob_sleeping, prob_active] = scale_get_sleepActProb(prob_sleeping, Nodes_list(k));
-               trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
-               
-               [state, seq] = scale_marko_chain_state_transition(trans);
-               
-               time = active_sleep_periods(state, seq);
-               
-               %disp(sprintf('Node ID# %d, state: %d, time in state: %d, seq# %d', k, state, time, seq)); 
-               
-               % Node continues to be in active state
-               if state == 1
-                  Nodes_list(k).active_time_left = time; 
+           
+           if(current_active_neighbors == 0)
+               Nodes_list = scale_send_beacon_message(Nodes_list, k);
+
+               action = [];
+               action.type = 'broadcast_beacon';
+               Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+
+               % Calculate next sleeping and active time
+               if Nodes_list(k).active_time_left > 1
+                   Nodes_list(k).active_time_left = Nodes_list(k).active_time_left - 1;
+
                else
-                   Nodes_list(k).status = 0;
-                   Nodes_list(k).active_time_left = 0;
-                   Nodes_list(k).sleeping_time_left = time;
+                   % Adjust new active/sleeping probability for the node based on its current conditions 
+                   [prob_sleeping, prob_active] = scale_get_sleepActProb(prob_sleeping, Nodes_list(k));
+                   trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
+
+                   [state, seq] = scale_marko_chain_state_transition(trans);
+
+                   time = active_sleep_periods(state, seq);
+
+                   %disp(sprintf('Node ID# %d, state: %d, time in state: %d, seq# %d', k, state, time, seq)); 
+
+                   % Node continues to be in active state
+                   if state == 1
+                      Nodes_list(k).active_time_left = time; 
+                   else
+                       Nodes_list(k).status = 0;
+                       Nodes_list(k).active_time_left = 0;
+                       Nodes_list(k).sleeping_time_left = time;
+                   end
+
+                   action = [];
+                   action.type = 'computing';
+                   Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+
+                   % Node ends another beacon message to its neighbors 
+                   % before going back to sleep
+                   Nodes_list = scale_send_beacon_message(Nodes_list, k);
+                   Nodes_list(k).beacon_broadcasted = 0; %reset broadcast beacon tag
+                   Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, beacon_broadcast_action);
                end
-               
+           else % Node go back to sleep 
+               Nodes_list(k).status = 0;
+               Nodes_list(k).active_time_left = 0;
+               Nodes_list(k).sleeping_time_left = scale_get_sleeping_time(Nodes_list, 'random');
+                
                action = [];
                action.type = 'computing';
                Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
-               
-               % Node ends another beacon message to its neighbors 
-               % before going back to sleep
-               Nodes_list = scale_send_beacon_message(Nodes_list, k);
-               Nodes_list(k).beacon_broadcasted = 0; %reset broadcast beacon tag
-               Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, beacon_broadcast_action);
            end
+               
            
         else % Node is sleeping
             %disp(sprintf('Node id# %d, sleeping ... ', k));
