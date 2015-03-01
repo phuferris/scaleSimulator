@@ -139,7 +139,8 @@ while 1
                Nodes_list(k).active_time_left = Nodes_list(k).active_time_left - 1;
                
            else
-               
+               % Adjust new active/sleeping probability for the node based on its current conditions 
+               [prob_sleeping, prob_active] = scale_get_sleepActProb(prob_sleeping, Nodes_list(k));
                trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
                
                [state, seq] = scale_marko_chain_state_transition(trans);
@@ -187,6 +188,9 @@ while 1
                Nodes_list = scale_send_beacon_message(Nodes_list, k);
                Nodes_list(k).beacon_broadcasted = 1;
                Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, beacon_broadcast_action);
+               
+               % Adjust new active/sleeping probability for the node based on its current conditions 
+               [prob_sleeping, prob_active] = scale_get_sleepActProb(prob_sleeping, Nodes_list(k));
                
                trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
                [state, seq] = scale_marko_chain_state_transition(trans);
