@@ -18,6 +18,7 @@ clock = 0;
 sentEvents = 0;
 forwardedEvents = 0;
 scale_reset_events_arrived_at_APs();
+lifeTime=0;
 
 beacon_broadcast_action = [];
 beacon_broadcast_action.type = 'broadcast_beacon';
@@ -120,7 +121,7 @@ while 1
                
            else
                
-               trans = [0.3 0.7; 0.7 03];
+               trans = [0.3 0.7; 0.7 0.3];
                
                [seq, state] = scale_marko_chain_state_transition(trans);
                

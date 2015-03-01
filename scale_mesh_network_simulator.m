@@ -23,6 +23,7 @@ global numCycles;
 global DutyTime;
 
 
+
 Nodes_list = [];
 
 sentStatistics = [];

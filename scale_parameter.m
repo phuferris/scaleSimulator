@@ -26,6 +26,10 @@ global bufferSize;
 global wakeup_power;
 global active_sleep_periods;
 
+global powerWeight;
+global neighborWeight;
+global distanceWeight;
+
 %=======================================
 
 numNodes = 25;
@@ -56,3 +60,7 @@ wakeup_power = 0.3;  % mAh
 
 active_sleep_periods = [5,6,7,8,9,10,11,12,13,14,15;5,6,7,8,9,10,11,12,13,14,15];
 
+%constants to calculate next sleep probability
+powerWeight= 0.05;
+neighborWeight=0.06;
+distanceWeight=0.05;
