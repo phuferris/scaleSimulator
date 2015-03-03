@@ -30,7 +30,7 @@ global active_sleep_periods;
 
 numNodes = 25;
 numAPs = 25;
-initial_power = 1000; % 4400mAh - 5V @ 1A
+initial_power = 1100; % 4400mAh - 5V @ 1A
 wireless_range = 70; % 100 feets
 
 broadcast_message_size = 0.1; % Mb

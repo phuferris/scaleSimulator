@@ -115,7 +115,7 @@ Events_list = scale_generate_initial_events(Events_list, numNodes, maxEvents, ev
 % be sent to its access points, every while loop will count as 
 % 1 second of sensors' clock.
 
-max_run_time = 300;
+max_run_time = 3000;
 
 % ################### Begin of all active schema ####################
 
