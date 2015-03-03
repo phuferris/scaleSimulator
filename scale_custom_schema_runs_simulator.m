@@ -117,8 +117,8 @@ max_run_time = 1000;
 powerWeight = 0.02;
 neighborWeight = 0.06;
 distanceWeight = 0.05;
-prob_sleeping = 0.4;
-run1_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping);
+prob_sleeping1 = 0.4;
+run1_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping1);
 
 scale_get_events_arrived_at_APs();
 
@@ -134,12 +134,12 @@ sentStatistics.run1_power = round(run1_Power);
 powerWeight = 0.02;
 neighborWeight =0.06;
 distanceWeight = 0.05;
-prob_sleeping = 0.5;
+prob_sleeping2 = 0.5;
 
 % ################### Begin of optimized schema ####################
 
 % Optimized sleeping schema with Marko Chain
-run2_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping);
+run2_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping2);
 scale_get_events_arrived_at_APs();
 
 sentStatistics.run2_sentEvent = sentEvents;
@@ -156,12 +156,12 @@ disp(sentStatistics);
 powerWeight = 0.02;
 neighborWeight = 0.06;
 distanceWeight = 0.05;
-prob_sleeping = 0.8;
+prob_sleeping3 = 0.8;
 
 % ################### Begin of optimized schema ####################
 
 % Optimized sleeping schema with Marko Chain
-run3_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping);
+run3_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping3);
 scale_get_events_arrived_at_APs();
 
 sentStatistics.run3_sentEvent = sentEvents;
@@ -174,5 +174,5 @@ sentStatistics.run3_power = round(run3_Power);
 disp(sprintf('Sent Statistics'));
 disp(sentStatistics);
 
-
-
+%draw power graph
+scale_custom_power_graph(prob_sleeping1, prob_sleeping2,prob_sleeping3, sentStatistics);
