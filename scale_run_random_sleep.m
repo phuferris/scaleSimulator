@@ -6,6 +6,9 @@ global forwardedEvents;
 global lifeTime;
 global activeTime;
 global numNodes;
+global powerOvertime;
+global initial_power;
+global timeInterval;
 
 
 % Initialize nodes' active and inactive time
@@ -20,6 +23,10 @@ forwardedEvents = 0;
 scale_reset_events_arrived_at_APs();
 lifeTime=0;
 activeTime=zeros(numNodes,1);
+
+powerOvertime=zeros(numNodes,1+floor(max_run_time/timeInterval));
+powerOvertime(:,1)=initial_power;
+countInterval=1;
 
 beacon_broadcast_action = [];
 beacon_broadcast_action.type = 'broadcast_beacon';
@@ -42,7 +49,18 @@ while 1
     events = [];
     events = scale_get_events(Events_list, events, clock);
     
+    %keep track of time interval
+        if(mod(clock,timeInterval)==0)
+           countInterval= countInterval+1;
+        end
+    
     for k=1:numel(Nodes_list)
+        
+         %record power every time interval
+        if(mod(clock,timeInterval)==0)
+           powerOvertime(k,countInterval)=Nodes_list(k).power;
+        end
+        
         % Node is active
         if Nodes_list(k).status == 1 && Nodes_list(k).active_time_left > 0
             action = [];

@@ -17,12 +17,14 @@ global forwardedEvents;
 global totalReceived;
 global lifeTime;
 global activeTime;
+global timeInterval;
+global powerOvertime;
 
 global powerWeight;
 global neighborWeight;
 global distanceWeight;
 
-
+timeInterval= 1; %record power of each node every time interval
 powerWeight = 0.02;
 neighborWeight = 0.06;
 distanceWeight = 0.05;
@@ -124,6 +126,7 @@ ActPower = scale_run_all_active(Nodes_list, Events_list, max_run_time);
 ActLife = lifeTime;
 ActDuty = 100;
 
+
 scale_get_events_arrived_at_APs();
 sentStatistics.act_sentEvent = sentEvents;
 sentStatistics.act_forwardedEvents = forwardedEvents;
@@ -132,6 +135,17 @@ sentStatistics.act_totalReceived = totalReceived;
 if (ActLife==0)
  ActLife= max_run_time;
 end
+
+%prepare for power over time plot
+A=[APs_list.connect_node_id];
+NA=setdiff([Nodes_list.id],A);
+%nodes with APs
+ActPowerOvertime(1,:)=powerOvertime(A(1),:);
+ActPowerOvertime(2,:)=powerOvertime(A(numel(A)),:);
+%nodes without APs
+ActPowerOvertime(3,:)=powerOvertime(NA(1),:);
+ActPowerOvertime(4,:)=powerOvertime(NA(numel(NA)),:);
+
 % ################### End of all active schema #####################
 
 % ############### Begin of random sleeping schema ##################
@@ -141,6 +155,7 @@ end
 RandPower = scale_run_random_sleep(Nodes_list, Events_list, max_run_time);
 RandLife = lifeTime;
 RandDuty = 0; 
+
 
 scale_get_events_arrived_at_APs();
 sentStatistics.random_sentEvent = sentEvents;
@@ -155,6 +170,14 @@ elseif(RandLife==0)
     RandLife=max_run_time;
 end
 
+%prepare for power over time plot
+%nodes with APs
+RandPowerOvertime(1,:)=powerOvertime(A(1),:);
+RandPowerOvertime(2,:)=powerOvertime(A(numel(A)),:);
+%nodes without APs
+RandPowerOvertime(3,:)=powerOvertime(NA(1),:);
+RandPowerOvertime(4,:)=powerOvertime(NA(numel(NA)),:);
+
 % ################# End of random sleeping schema ##################
 
 % ################### Begin of optimized schema ####################
@@ -164,8 +187,8 @@ CustPower = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_s
 CustLife = lifeTime;
 CustDuty = 0;
 
-scale_get_events_arrived_at_APs();
 
+scale_get_events_arrived_at_APs();
 sentStatistics.cust_sentEvent = sentEvents;
 sentStatistics.cust_forwardedEvents = forwardedEvents;
 sentStatistics.cust_totalReceived = totalReceived;
@@ -177,6 +200,14 @@ elseif(CustLife==0)
     CustDuty=floor(sum(activeTime)/numNodes/max_run_time*100);
     CustLife=max_run_time;
 end
+
+%prepare for power over time plot
+%nodes with APs
+CustPowerOvertime(1,:)=powerOvertime(A(1),:);
+CustPowerOvertime(2,:)=powerOvertime(A(numel(A)),:);
+%nodes without APs
+CustPowerOvertime(3,:)=powerOvertime(NA(1),:);
+CustPowerOvertime(4,:)=powerOvertime(NA(numel(NA)),:);
 
 % ################### End of optimized schema ####################
 
@@ -190,6 +221,9 @@ disp(sentStatistics);
 scale_draw_events(sentStatistics);
 scale_percent_compare(numel(Nodes_list),'All Active', 'Random','Customize', ActPower, RandPower, CustPower, sentStatistics);
 
+scale_powerTime_graph(A,NA,ActPowerOvertime, max_run_time, 'All Active'); 
+scale_powerTime_graph(A,NA,RandPowerOvertime, max_run_time,'Random');
+scale_powerTime_graph(A,NA,CustPowerOvertime, max_run_time,'Customize');
 
 if (lifeTime~=0)
     scale_lifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife);

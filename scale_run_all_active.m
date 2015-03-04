@@ -4,7 +4,10 @@ function [TotPower]=scale_run_all_active(Nodes_list, Events_list, max_run_time)
 global sentEvents;
 global forwardedEvents;
 global lifeTime;
-
+global timeInterval;
+global powerOvertime;
+global initial_power;
+global numNodes;
 
 % Set nodes to be active
 for k=1:numel(Nodes_list)
@@ -16,6 +19,11 @@ clock = 0;
 sentEvents = 0;
 forwardedEvents = 0;
 scale_reset_events_arrived_at_APs();
+
+
+powerOvertime=zeros(numNodes,1+floor(max_run_time/timeInterval));
+powerOvertime(:,1)=initial_power;
+countInterval=1;
 
 % Loop until clock is reach 
 % the maximum run time thredhold
@@ -36,13 +44,23 @@ while 1
     
     events = [];
     events = scale_get_events(Events_list, events, clock);
-    
+       
+    %keep track of time interval
+        if(mod(clock,timeInterval)==0)
+           countInterval= countInterval+1;
+        end
+        
     for k=1:numel(Nodes_list)
         
         action = [];
         action.type = 'active';
         action.time = 1;
         Nodes_list(k).power = scale_power_consumption(Nodes_list(k).power, action);
+        
+         %record power every time interval
+        if(mod(clock,timeInterval)==0)
+           powerOvertime(k,countInterval)=Nodes_list(k).power;
+        end
         
         % Send beacon message to neighbors to update
         % its current status for every 10 seconds
