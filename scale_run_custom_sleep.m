@@ -22,7 +22,7 @@ prob_active = 1-prob_sleeping;
 % Initialize nodes' active and inactive time
 for k=1:numel(Nodes_list)
     
-     trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
+     trans = [prob_active (1-prob_active);(1-prob_sleeping), prob_sleeping];
      [state, seq] = scale_marko_chain_state_transition(trans);
      time = active_sleep_periods(state, seq);
      
