@@ -2,12 +2,12 @@ function scale_powerTime_graph(A,NA,Power,max_run_time, protocol)
 global timeInterval;
 
 
-clr=['r','y','b','c'];
+clr=['r','g','b','k'];
 
 figure;
 hold on;
 for x=1:4
-plot(0:timeInterval:max_run_time,Power(x,:),[clr(x),'-']);
+plot(0:timeInterval:max_run_time,Power(x,:),[clr(x),'-'],'LineWidth',2);
 end
 hold off;
 

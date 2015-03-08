@@ -30,7 +30,7 @@ global active_sleep_periods;
 
 numNodes = 25;
 numAPs = 25;
-initial_power = 1000; % 4400mAh - 5V @ 1A
+initial_power = 1100; % 4400mAh - 5V @ 1A
 wireless_range = 70; % 100 feets
 
 broadcast_message_size = 0.1; % Mb
@@ -38,7 +38,7 @@ beacon_message_size = 0.3; % Mb
 
 sleeping_power = 0.005; % mAh per sec
 active_power = 0.05; % mAh per sec
-sending_power = 0.5; % Mb per mAh
+sending_power = 1; % Mb per mAh
 receiving_power = 0.1; % Mb per mAh
 
 computation_power = 0.005; % mAh

@@ -22,7 +22,7 @@ prob_active = 1-prob_sleeping;
 % Initialize nodes' active and inactive time
 for k=1:numel(Nodes_list)
     
-     trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
+     trans = [prob_active (1-prob_active); (1-prob_sleeping), prob_sleeping];
      [state, seq] = scale_marko_chain_state_transition(trans);
      time = active_sleep_periods(state, seq);
      
@@ -164,7 +164,7 @@ while 1
                else
                    % Adjust new active/sleeping probability for the node based on its current conditions 
                    [prob_sleeping, prob_active] = scale_get_sleepActProb(prob_sleeping, Nodes_list(k));
-                   trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
+                   trans = [prob_active (1-prob_active); (1-prob_sleeping), prob_sleeping];
 
                    [state, seq] = scale_marko_chain_state_transition(trans);
 
@@ -225,7 +225,7 @@ while 1
                % Adjust new active/sleeping probability for the node based on its current conditions 
                [prob_sleeping, prob_active] = scale_get_sleepActProb(prob_sleeping, Nodes_list(k));
                
-               trans = [prob_active (1-prob_active); prob_sleeping, (1-prob_sleeping)];
+               trans = [prob_active (1-prob_active); (1-prob_sleeping), prob_sleeping];
                [state, seq] = scale_marko_chain_state_transition(trans);
                
                time = active_sleep_periods(state, seq);

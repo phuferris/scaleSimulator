@@ -230,5 +230,3 @@ if (lifeTime~=0)
     scale_lifeThroughput_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife,sentStatistics);
     scale_dutyLifetime_graph('All Active', 'Random','Customize', ActLife, RandLife, CustLife, ActDuty, RandDuty, CustDuty);
 end
-
-

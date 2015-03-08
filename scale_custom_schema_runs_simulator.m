@@ -117,7 +117,7 @@ max_run_time = 3000;
 powerWeight = 0.02;
 neighborWeight = 0.06;
 distanceWeight = 0.05;
-prob_sleeping1 = 0.4;
+prob_sleeping1 = 0.1;
 run1_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping1);
 
 scale_get_events_arrived_at_APs();
@@ -134,7 +134,7 @@ sentStatistics.run1_power = round(run1_Power);
 powerWeight = 0.02;
 neighborWeight =0.06;
 distanceWeight = 0.05;
-prob_sleeping2 = 0.5;
+prob_sleeping2 = 0.3;
 
 % ################### Begin of optimized schema ####################
 
@@ -156,7 +156,7 @@ disp(sentStatistics);
 powerWeight = 0.02;
 neighborWeight = 0.06;
 distanceWeight = 0.05;
-prob_sleeping3 = 0.8;
+prob_sleeping3 = 0.5;
 
 % ################### Begin of optimized schema ####################
 
@@ -171,8 +171,48 @@ sentStatistics.run3_power = round(run3_Power);
 
 % ################### End of optimized schema ####################
 
+% Run 4 ... 
+powerWeight = 0.02;
+neighborWeight = 0.06;
+distanceWeight = 0.05;
+prob_sleeping4 = 0.7;
+
+% ################### Begin of optimized schema ####################
+
+% Optimized sleeping schema with Marko Chain
+run4_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping4);
+scale_get_events_arrived_at_APs();
+
+sentStatistics.run4_sentEvent = sentEvents;
+sentStatistics.run4_forwardedEvents = forwardedEvents;
+sentStatistics.run4_totalReceived = totalReceived;
+sentStatistics.run4_power = round(run4_Power);
+
+% ################### End of optimized schema ####################
+
+
+% Run 5 ... 
+powerWeight = 0.02;
+neighborWeight = 0.06;
+distanceWeight = 0.05;
+prob_sleeping5 = 1;
+
+% ################### Begin of optimized schema ####################
+
+% Optimized sleeping schema with Marko Chain
+run5_Power = scale_run_custom_sleep(Nodes_list, Events_list, max_run_time, prob_sleeping5);
+scale_get_events_arrived_at_APs();
+
+sentStatistics.run5_sentEvent = sentEvents;
+sentStatistics.run5_forwardedEvents = forwardedEvents;
+sentStatistics.run5_totalReceived = totalReceived;
+sentStatistics.run5_power = round(run5_Power);
+
+% ################### End of optimized schema ####################
+
+
 disp(sprintf('Sent Statistics'));
 disp(sentStatistics);
 
 %draw power graph
-scale_custom_power_graph(prob_sleeping1, prob_sleeping2,prob_sleeping3, sentStatistics);
+scale_custom_power_graph(prob_sleeping1, prob_sleeping2, prob_sleeping3, prob_sleeping4, prob_sleeping5, sentStatistics);
