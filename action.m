@@ -17,7 +17,7 @@ function [NewEvents] = action(event, log_file)
 % to add ad hoc routing: done
 % to add application layer actions:
 % to add figures or animations to show network and traffic change: not critical
-
+# test
 global adebug bdebug;
 global Gt Gr freq L ht hr pathLossExp std_db d0 rmodel;
 global cs_threshold white_noise_variance rv_threshold rv_threshold_delta;
